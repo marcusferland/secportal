@@ -123,7 +123,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div id='auth-container' className='login'>
+      <div id='auth-container' className='login' style={{backgroundImage: "url(/imgs/common/background.jpg)"}}>
         <div id='auth-row'>
           <div id='auth-cell'>
             <Grid>
@@ -132,11 +132,49 @@ class Login extends React.Component {
                   <PanelContainer controls={false}>
                     <Panel>
                       <PanelBody style={{padding: 0}}>
-                        <div className='text-center bg-darkblue fg-white'>
-                          <h3 style={{margin: 0, padding: 25}}>Sign in to Rubix</h3>
+                        <div className='text-center bg-esentire fg-white'>
+                          <h3 style={{margin: 0, padding: 25}}>
+                            <img src='/imgs/common/esentire-logo-white.png' height='40' />
+                          </h3>
+                        </div>
+                        <div style={{padding: 25, paddingTop: 0, paddingBottom: 0, margin: 'auto', marginBottom: 25, marginTop: 25}}>
+                          <Form onSubmit={this.processForm} method='post'>
+                            <FormGroup controlId='emailaddress'>
+                              <InputGroup bsSize='large'>
+                                <InputGroup.Addon>
+                                  <Icon glyph='icon-fontello-mail' />
+                                </InputGroup.Addon>
+                                <FormControl value={this.state.user.email} name='email' onChange={this.changeUser} autoFocus type='email' className='border-focus-blue' placeholder='email@address.com' />
+                              </InputGroup>
+                            </FormGroup>
+                            <FormGroup controlId='password'>
+                              <InputGroup bsSize='large'>
+                                <InputGroup.Addon>
+                                  <Icon glyph='icon-fontello-key' />
+                                </InputGroup.Addon>
+                                <FormControl value={this.state.user.password} name='password' onChange={this.changeUser} type='password' className='border-focus-blue' placeholder='password' />
+                              </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                              <Grid>
+                                <Row>
+                                  <Col xs={6} collapseLeft collapseRight style={{paddingTop: 10}}>
+                                    <Link to={::this.getPath('signup')}>Create an eSentire account</Link>
+                                  </Col>
+                                  <Col xs={6} collapseLeft collapseRight className='text-right'>
+                                    <Button outlined lg type='submit' bsStyle='blue'>Login</Button>
+                                  </Col>
+                                </Row>
+                              </Grid>
+                            </FormGroup>
+                          </Form>
+                        </div>
+                        <div>
+                          <div className='text-center' style={{padding: 12.5}}>
+                            &mdash; or use your social account &mdash;
+                          </div>
                         </div>
                         <div className='bg-hoverblue fg-black50 text-center' style={{padding: 12.5}}>
-                          <div>You need to sign in for those awesome features</div>
                           <div style={{marginTop: 12.5, marginBottom: 12.5}}>
                             <Button id='facebook-btn' lg bsStyle='darkblue' type='submit' onClick={::this.back}>
                               <Icon glyph='icon-fontello-facebook' />
@@ -145,43 +183,6 @@ class Login extends React.Component {
                           </div>
                           <div>
                             <a id='twitter-link' href='#' onClick={::this.back}><Icon glyph='icon-fontello-twitter' /><span> or with twitter</span></a>
-                          </div>
-                        </div>
-                        <div>
-                          <div className='text-center' style={{padding: 12.5}}>
-                            or use your Rubix account
-                          </div>
-                          <div style={{padding: 25, paddingTop: 0, paddingBottom: 0, margin: 'auto', marginBottom: 25, marginTop: 25}}>
-                            <Form onSubmit={this.processForm} method='post'>
-                              <FormGroup controlId='emailaddress'>
-                                <InputGroup bsSize='large'>
-                                  <InputGroup.Addon>
-                                    <Icon glyph='icon-fontello-mail' />
-                                  </InputGroup.Addon>
-                                  <FormControl value={this.state.user.email} name='email' onChange={this.changeUser} autoFocus type='email' className='border-focus-blue' placeholder='email@address.com' />
-                                </InputGroup>
-                              </FormGroup>
-                              <FormGroup controlId='password'>
-                                <InputGroup bsSize='large'>
-                                  <InputGroup.Addon>
-                                    <Icon glyph='icon-fontello-key' />
-                                  </InputGroup.Addon>
-                                  <FormControl value={this.state.user.password} name='password' onChange={this.changeUser} type='password' className='border-focus-blue' placeholder='password' />
-                                </InputGroup>
-                              </FormGroup>
-                              <FormGroup>
-                                <Grid>
-                                  <Row>
-                                    <Col xs={6} collapseLeft collapseRight style={{paddingTop: 10}}>
-                                      <Link to={::this.getPath('signup')}>Create a Rubix account</Link>
-                                    </Col>
-                                    <Col xs={6} collapseLeft collapseRight className='text-right'>
-                                      <Button outlined lg type='submit' bsStyle='blue'>Login</Button>
-                                    </Col>
-                                  </Row>
-                                </Grid>
-                              </FormGroup>
-                            </Form>
                           </div>
                         </div>
                       </PanelBody>
