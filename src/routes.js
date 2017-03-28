@@ -78,6 +78,8 @@ import Pricing from './routes/Pricing';
 
 import Lock from './routes/Lock';
 
+import Totp from './routes/Totp';
+
 function requireAuth(nextState, replace) {
   // Auth.go()
   if ( ! Auth.isUserAuthenticated() ) {
@@ -164,6 +166,7 @@ const routes = (
 const basicRoutes = (
   <Route>
     <Route path='lock' component={Lock} />
+    <Route path='totp' component={Totp} />
     <Route path='login' component={Login} />
     <Route path='signup' component={Signup} />
   </Route>
