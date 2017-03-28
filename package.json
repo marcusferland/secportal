@@ -4,6 +4,9 @@
   "version": "4.1.0",
   "description": "Rubix Demo",
   "homepage": "https://rubix410.sketchpixy.com/",
+  "engines" : {
+    "node": "7.7.4"
+  },
   "watch": {
     "dev:server": "tmp/bundle.js"
   },
