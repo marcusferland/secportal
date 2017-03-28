@@ -4,6 +4,7 @@
 @include generateColors("warning", $brand-warning, white);
 @include generateColors("danger", $brand-danger, white);
 
+@include generateColors("esentire", #A93439, white);
 @include generateColors("deepred", #D71F4B, white);
 @include generateColors("red", #EA7882, white);
 @include generateColors("lightred", #F09FA6, white);
