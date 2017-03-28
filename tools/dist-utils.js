@@ -24,7 +24,7 @@ module.exports = function(callback) {
       });
 
       var html = fn({
-        app_scripts: "\n    <script src='/js/plugins.js'></script>\n    <script src='/js/app.js'></script>",
+        app_scripts: "\n    <script async src='/js/plugins.js'></script>\n    <script async src='/js/app.js'></script>",
         app_stylesheets: "\n    <link rel='stylesheet' href='/css/main.css' />"
       });
 

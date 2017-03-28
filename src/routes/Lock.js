@@ -64,8 +64,8 @@ export default class Lock extends React.Component {
                   <Form onSubmit={::this.back}>
                     <FormGroup
                       controlId="lockFormGroup">
-                      <ControlLabel>Anna Sanchez</ControlLabel>
-                      <img src='/imgs/app/avatars/avatar.jpg' width='128' height='128' alt='avatar' />
+                      <ControlLabel>Marc Ferland</ControlLabel>
+                      <img src='/imgs/app/avatars/marc-ferland.jpg' width='128' height='128' alt='avatar' />
                       <FormControl type='password' placeholder='Password' autoFocus />
                       <Button type='submit' className='hidden'>Unlock</Button>
                     </FormGroup>

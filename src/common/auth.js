@@ -1,8 +1,6 @@
 import React from 'react'
 import jwt from 'jsonwebtoken'
 import Cookie from 'react-cookie'
-import axios from 'axios'
-import querystring from 'querystring'
 
 class Auth extends React.Component {
 

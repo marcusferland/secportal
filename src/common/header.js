@@ -27,13 +27,19 @@ import {
 
 import Auth from './auth'
 
+@withRouter
 class Brand extends React.Component {
+  getPath(path) {
+    var dir = this.props.location.pathname.search('rtl') !== -1 ? 'rtl' : 'ltr';
+    path = `/${dir}/${path}`;
+    return path;
+  }
   render() {
     return (
       <Navbar.Header {...this.props}>
         <Navbar.Brand tabIndex='-1'>
-          <a href='#'>
-            <img src='/imgs/common/esentire-logo-white.png' alt='rubix' height='30' />
+          <a href={::this.getPath('dashboard')}>
+            <img src='/imgs/common/esentire-logo-white.png' alt='eSentire' height='28' />
           </a>
         </Navbar.Brand>
       </Navbar.Header>

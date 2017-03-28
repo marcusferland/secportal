@@ -158,7 +158,7 @@ class Login extends React.Component {
                                   <InputGroup.Addon>
                                     <Icon glyph='icon-fontello-mail' />
                                   </InputGroup.Addon>
-                                  <FormControl value={this.state.user.email} name='email' onChange={this.changeUser} autoFocus type='email' className='border-focus-blue' placeholder='support@sketchpixy.com' />
+                                  <FormControl value={this.state.user.email} name='email' onChange={this.changeUser} autoFocus type='email' className='border-focus-blue' placeholder='email@address.com' />
                                 </InputGroup>
                               </FormGroup>
                               <FormGroup controlId='password'>
