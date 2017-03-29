@@ -1,4 +1,3 @@
 # Security Portal
 
-**Required**
-⋅⋅* node.js v7.7.4
+**Required** node.js v7.7.4
