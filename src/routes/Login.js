@@ -6,6 +6,8 @@ import cookie from 'react-cookie'
 import axios from 'axios'
 import querystring from 'querystring'
 
+import Totp from '../routes/Totp'
+
 import {
   Row,
   Col,
@@ -167,6 +169,7 @@ class Login extends React.Component {
                             </FormGroup>
                           </Form>
                         </div>
+                        <Totp />
                         <div>
                           <div className='text-center' style={{padding: 12.5}}>
                             &mdash; or use your social account &mdash;

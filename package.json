@@ -4,7 +4,7 @@
   "version": "4.1.0",
   "description": "Rubix Demo",
   "homepage": "https://rubix410.sketchpixy.com/",
-  "engines" : {
+  "engines": {
     "node": "7.7.4"
   },
   "watch": {
@@ -89,6 +89,7 @@
     "axios": "^0.15.3",
     "babel-cli": "^6.10.1",
     "body-parser": "^1.17.1",
+    "canvas": "^1.6.5",
     "classnames": "^2.2.5",
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
@@ -99,6 +100,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta11",
+    "qr-image": "^3.2.0",
     "qrcode": "^0.7.1",
     "querystring": "^0.2.0",
     "react": "^15.4.2",
