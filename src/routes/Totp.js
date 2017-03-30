@@ -6,6 +6,7 @@ import cookie from 'react-cookie'
 import axios from 'axios'
 import querystring from 'querystring'
 import qr from 'qrcode'
+import speakeasy from 'speakeasy'
 
 import {
   Row,
@@ -15,6 +16,7 @@ import {
   Form,
   Badge,
   Image,
+  Modal,
   Panel,
   Button,
   PanelBody,
@@ -48,7 +50,7 @@ export default class Totp extends React.Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:3000/GVRDM52JFJLVE42XJUTDEWZREVBU46TU')
+      .get('http://localhost:3000/NMTHK22QOB2FWLSNLV5USV26OJKDMTTV')
       .then(res => {
         this.setState({
           qrcode: res.data.url,
@@ -64,8 +66,24 @@ export default class Totp extends React.Component {
     this.props.router.goBack()
   }
 
+  alert(msg = null) {
+    vex.dialog.alert(msg);
+  }
+
   processForm(e) {
     e.preventDefault()
+
+    const verified = speakeasy.totp.verify({
+      secret: 'NMTHK22QOB2FWLSNLV5USV26OJKDMTTV',
+      encoding: 'base32',
+      token: this.state.user.totp
+    })
+    if (verified){
+      this.props.router.push(::this.getPath('dashboard'))
+    }
+    else {
+      ::this.alert('Not verified!')
+    }
   }
 
   /**
@@ -147,6 +165,6 @@ export default class Totp extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
