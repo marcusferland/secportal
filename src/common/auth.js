@@ -1,6 +1,7 @@
 import React from 'react'
 import jwt from 'jsonwebtoken'
 import Cookie from 'react-cookie'
+import speakeasy from 'speakeasy'
 
 class Auth extends React.Component {
 
@@ -10,12 +11,13 @@ class Auth extends React.Component {
         email: '',
         password: ''
       },
-      token: Cookie.load('token') || null
+      token: Cookie.load('token') || null,
+      secret: ''
     }
   }
 
-  static go() {
-    return this.requestToken()
+  static generate2FASecret() {
+    return speakeasy.generateSecret({ length: 20 })
   }
 
   /**

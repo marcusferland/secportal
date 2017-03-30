@@ -50,17 +50,17 @@ export default class Signup extends React.Component {
   }
 
   back(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.router.goBack();
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.router.goBack()
   }
 
   componentDidMount() {
-    $('html').addClass('authentication');
+    $('html').addClass('authentication')
   }
 
   componentWillUnmount() {
-    $('html').removeClass('authentication');
+    $('html').removeClass('authentication')
   }
 
   processForm(e) {
@@ -70,6 +70,7 @@ export default class Signup extends React.Component {
     const email = this.state.user.email
     const password = this.state.user.password
     const role = 'esadmin'
+    const secret = Auth.generate2FASecret().base32
     const date = new Date()
     const config = {
       headers: {
@@ -82,10 +83,10 @@ export default class Signup extends React.Component {
         name: name,
         email: email,
         password: password,
-        role: role
+        role: role,
+        secret: secret
       }), config)
       .then(response => {
-        console.log(response.data)
         if (response.data.token) {
           date.setMinutes(date.getMinutes() + 15)
 
@@ -123,9 +124,9 @@ export default class Signup extends React.Component {
   }
 
   getPath(path) {
-    var dir = this.props.location.pathname.search('rtl') !== -1 ? 'rtl' : 'ltr';
-    path = `/${dir}/${path}`;
-    return path;
+    var dir = this.props.location.pathname.search('rtl') !== -1 ? 'rtl' : 'ltr'
+    path = `/${dir}/${path}`
+    return path
   }
 
   render() {
@@ -215,6 +216,6 @@ export default class Signup extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

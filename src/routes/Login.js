@@ -48,7 +48,7 @@ class Login extends React.Component {
         email: '',
         password: ''
       }
-    };
+    }
 
     this.processForm = this.processForm.bind(this)
     this.changeUser = this.changeUser.bind(this)
@@ -80,7 +80,6 @@ class Login extends React.Component {
         password: password
       }), config)
       .then(response => {
-        console.log(response.data)
         if (response.data.token) {
           date.setMinutes(date.getMinutes() + 15)
 
@@ -91,7 +90,7 @@ class Login extends React.Component {
             path: '/',
             secure: false
           })
-          this.props.router.push(::this.getPath('dashboard'))
+          this.props.router.push(::this.getPath('totp'))
         }
         else {
           // ...
@@ -169,7 +168,6 @@ class Login extends React.Component {
                             </FormGroup>
                           </Form>
                         </div>
-                        <Totp />
                         <div>
                           <div className='text-center' style={{padding: 12.5}}>
                             &mdash; or use your social account &mdash;
