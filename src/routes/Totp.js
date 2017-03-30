@@ -49,15 +49,20 @@ export default class Totp extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get('http://localhost:3000/NMTHK22QOB2FWLSNLV5USV26OJKDMTTV')
-      .then(res => {
-        this.setState({
-          qrcode: res.data.url,
-          token: res.data.token
-        })
+    axios({
+      method: 'get',
+      url: 'http://localhost:3000/jwt',
+      headers: {
+        'Authorization': `Bearer ${Auth.getToken()}`
+      }
+    })
+    .then(res => {
+      this.setState({
+        qrcode: res.data.url,
+        token: res.data.token
       })
-      .catch(err => {})
+    })
+    .catch(err => {})
   }
 
   back(e) {
