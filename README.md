@@ -3,7 +3,7 @@
 **Required**
 
 1. node.js v7.7.4 (latest)
-..* Nifty NPM package tool to easily swap between node.js versions: https://www.npmjs.com/package/n `$ npm install -g n`
+  * Nifty NPM package tool to easily swap between node.js versions: https://www.npmjs.com/package/n `$ npm install -g n`
 2. MongoDB >= v3.2.10
 
 # Geting started
