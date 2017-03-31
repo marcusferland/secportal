@@ -38,10 +38,6 @@ class Login extends React.Component {
   constructor(props, context) {
     super(props)
 
-    // user is already logged in (token is verified)
-    // redirect them to dashboard
-    if ( Auth.isUserAuthenticated() ) this.props.router.replace(::this.getPath('dashboard'))
-
     this.state = {
       errors: {},
       user: {
