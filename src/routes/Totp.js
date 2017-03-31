@@ -38,7 +38,7 @@ export default class Totp extends React.Component {
 
     // user is attempting to access this page directly
     // redirect them to login page
-    if ( ! Auth.isUserAuthenticated('authed') ) this.props.router.replace(::this.getPath('login'))
+    // if ( ! Auth.isUserAuthenticated('authed') ) this.props.router.replace(::this.getPath('login'))
 
     this.state = {
       errors: {},
@@ -114,6 +114,8 @@ export default class Totp extends React.Component {
           path: '/',
           secure: false
         })
+
+        cookie.remove('authed', '/')
 
         // good; send to dashboard
         this.props.router.push(::this.getPath('dashboard'))
