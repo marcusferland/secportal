@@ -25,8 +25,8 @@ class Auth extends React.Component {
    *
    * @returns {boolean}
    */
-  static isUserAuthenticated() {
-    return this.verifyToken()
+  static isUserAuthenticated(whichToken = 'token') {
+    return this.verifyToken(whichToken)
   }
 
   /**
@@ -34,6 +34,7 @@ class Auth extends React.Component {
    *
    */
   static deauthenticateUser() {
+    Cookie.remove('authed', '/')
     Cookie.remove('token', '/')
     // localStorage.removeItem('token');
   }
@@ -43,16 +44,16 @@ class Auth extends React.Component {
    *
    * @returns {string}
    */
-  static getToken() {
-    return Cookie.load('token')
+  static getToken(whichToken = 'token') {
+    return Cookie.load(whichToken)
     // return localStorage.getItem('token')
   }
 
   /**
    * Check JWT for validity
    */
-  static verifyToken() {
-    const token = this.getToken()
+  static verifyToken(whichToken = 'token') {
+    const token = this.getToken(whichToken)
     let verified = false
 
     if (token) {
@@ -64,6 +65,12 @@ class Auth extends React.Component {
       }
     }
     else { return false }
+  }
+
+  static generateTotpToken() {
+    Cookie.save('token', ::this.getToken('authed'))
+    Cookie.remove('authed')
+    return
   }
 
 }

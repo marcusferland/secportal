@@ -53,7 +53,7 @@ export default class Totp extends React.Component {
       method: 'get',
       url: 'http://localhost:3000/jwt',
       headers: {
-        'Authorization': `Bearer ${Auth.getToken()}`
+        'Authorization': `Bearer ${Auth.getToken('authed')}`
       }
     })
     .then(res => {
@@ -77,18 +77,22 @@ export default class Totp extends React.Component {
 
   processForm(e) {
     e.preventDefault()
-
     const verified = speakeasy.totp.verify({
-      secret: 'NMTHK22QOB2FWLSNLV5USV26OJKDMTTV',
+      secret: Auth.verifyToken('authed').user.secret,
       encoding: 'base32',
       token: this.state.user.totp
     })
-    if (verified){
+    if (verified) {
+      Auth.generateTotpToken()
       this.props.router.push(::this.getPath('dashboard'))
     }
     else {
       ::this.alert('Not verified!')
     }
+  }
+
+  getHelp() {
+    ::this.alert('<a href="https://support.google.com/accounts/answer/1066447?hl=en" target="_blank">Install Google Authenticator</a>')
   }
 
   /**
@@ -131,7 +135,7 @@ export default class Totp extends React.Component {
                         <div style={{padding: 25, paddingTop: 0, paddingBottom: 0, margin: 'auto', marginBottom: 25, marginTop: 25}}>
                           <div>
                             <h4><strong>1. Scan this barcode with your app</strong></h4>
-                            <small>Scan the image below with the two-factor authentication app on your phone.
+                            <small>Scan the image below with the two-factor authentication app on your phone (Eg. <a href='javascript:void(0)' onClick={::this.getHelp}>Google Authenticator</a>).
                             If you cannot use a barcode <a href="#">enter this text code</a> instead.</small>
                           </div>
                           <div className='text-center'>

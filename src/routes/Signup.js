@@ -97,7 +97,7 @@ export default class Signup extends React.Component {
             path: '/',
             secure: false
           })
-          this.props.router.push(::this.getPath('dashboard'))
+          this.props.router.push(::this.getPath('login'))
         }
         else {
           // ...

@@ -81,7 +81,6 @@ import Lock from './routes/Lock';
 import Totp from './routes/Totp';
 
 function requireAuth(nextState, replace) {
-  // Auth.go()
   if ( ! Auth.isUserAuthenticated() ) {
     replace({
       pathname: '/ltr/login'

@@ -83,7 +83,7 @@ class Login extends React.Component {
         if (response.data.token) {
           date.setMinutes(date.getMinutes() + 15)
 
-          cookie.save('token', response.data.token, {
+          cookie.save('authed', response.data.token, {
             domain: 'localhost',
             expires: date,
             maxAge: 900,

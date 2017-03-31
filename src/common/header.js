@@ -36,7 +36,7 @@ class Brand extends React.Component {
   }
   render() {
     return (
-      <Navbar.Header {...this.props}>
+      <Navbar.Header>
         <Navbar.Brand tabIndex='-1'>
           <a href={::this.getPath('dashboard')}>
             <img src='/imgs/common/esentire-logo-white.png' alt='eSentire' height='28' />
