@@ -87,6 +87,25 @@ function requireAuth(nextState, replace) {
     })
   }
 }
+function requireAuthTotp(nextState, replace) {
+  if ( ! Auth.isUserAuthenticated('authed') ) {
+    replace({
+      pathname: '/ltr/login'
+    })
+  }
+  if ( Auth.isUserAuthenticated('token') ) {
+    replace({
+      pathname: '/ltr/dashboard'
+    })
+  }
+}
+function isAuthed(nextState, replace) {
+  if ( Auth.isUserAuthenticated('token') ) {
+    replace({
+      pathname: '/ltr/dashboard'
+    })
+  }
+}
 
 class App extends React.Component {
   render() {
@@ -165,9 +184,9 @@ const routes = (
 const basicRoutes = (
   <Route>
     <Route path='lock' component={Lock} />
-    <Route path='totp' component={Totp} />
-    <Route path='login' component={Login} />
-    <Route path='signup' component={Signup} />
+    <Route path='totp' component={Totp} onEnter={requireAuthTotp} />
+    <Route path='login' component={Login} onEnter={isAuthed} />
+    <Route path='signup' component={Signup} onEnter={isAuthed} />
   </Route>
 );
 
