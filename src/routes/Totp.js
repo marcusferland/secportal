@@ -36,6 +36,10 @@ export default class Totp extends React.Component {
   constructor(props, context) {
     super(props)
 
+    // user is attempting to access this page directly
+    // redirect them to login page
+    if ( ! Auth.isUserAuthenticated('authed') ) this.props.router.replace(::this.getPath('login'))
+
     this.state = {
       errors: {},
       user: {
