@@ -50,6 +50,24 @@ class Auth extends React.Component {
   }
 
   /**
+   * method to set cookies
+   *
+   * @param {object} cookieObj
+   */
+  static setCookie(cookieObj) {
+    const date = new Date()
+
+    date.setMinutes(date.getMinutes() + 15)
+    Cookie.save(cookieObj.name, cookieObj.token, {
+      domain: cookieObj.domain, // localhost
+      expires: date,
+      maxAge: cookieObj.maxAge, // 900
+      path: cookieObj.path, // '/'
+      secure: cookieObj.secure // true|false
+    })
+  }
+
+  /**
    * Check JWT for validity
    */
   static verifyToken(whichToken = 'token') {
@@ -65,12 +83,6 @@ class Auth extends React.Component {
       }
     }
     else { return false }
-  }
-
-  static generateTotpToken() {
-    Cookie.save('token', ::this.getToken('authed'))
-    Cookie.remove('authed')
-    return
   }
 
 }
