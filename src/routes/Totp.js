@@ -7,6 +7,7 @@ import axios from 'axios'
 import querystring from 'querystring'
 import qr from 'qrcode'
 import speakeasy from 'speakeasy'
+import jwt from 'jsonwebtoken'
 
 import {
   Row,
@@ -77,14 +78,45 @@ export default class Totp extends React.Component {
 
   processForm(e) {
     e.preventDefault()
+
     const verified = speakeasy.totp.verify({
       secret: Auth.verifyToken('authed').user.secret,
       encoding: 'base32',
       token: this.state.user.totp
     })
+
     if (verified) {
-      Auth.generateTotpToken()
-      this.props.router.push(::this.getPath('dashboard'))
+      const tokenPayload = Auth.verifyToken('authed')
+      const payload = {
+        sub: tokenPayload.sub,
+        sub: tokenPayload.user
+      }
+
+      const token = jwt.sign(
+        payload,
+        'rH!y+sZcK-_a TTZyDWjPGAJ q-RF&6-GW', {
+          expiresIn: 900
+        }
+      )
+
+      if (token) {
+
+        const date = new Date()
+        date.setMinutes(date.getMinutes() + 15)
+        cookie.save('token', token, {
+          domain: 'localhost',
+          expires: date,
+          maxAge: 900,
+          path: '/',
+          secure: false
+        })
+
+        // good; send to dashboard
+        this.props.router.push(::this.getPath('dashboard'))
+      }
+      else {
+        ::this.alert('Not verified!')
+      }
     }
     else {
       ::this.alert('Not verified!')
