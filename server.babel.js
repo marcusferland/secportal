@@ -15,17 +15,14 @@ import RubixAssetMiddleware from '@sketchpixy/rubix/lib/node/RubixAssetMiddlewar
 const port = process.env.PORT || 8080
 const app = express()
 
-app.use(compression())
+app.use(compression({
+  level: 9,
+  memLevel: 9
+}))
 app.use(cookieParser())
 app.use(express.static(path.join(process.cwd(), 'public')))
 app.set('views', path.join(process.cwd(), 'views'))
 app.set('view engine', 'pug')
-/** app.use((req, res, next) => {
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
-  res.header('Expires', '-1')
-  res.header('Pragma', 'no-cache')
-  next()
-}) */
 
 function renderHTML(req, res) {
   /**
