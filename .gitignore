@@ -28,6 +28,7 @@ build/Release
 dist
 
 # Dependency directories
+nginx
 node_modules
 jspm_packages
 tmp
