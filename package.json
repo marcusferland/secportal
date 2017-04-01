@@ -32,7 +32,7 @@
     "build:client": "cross-env EXTRACT_TEXT_PLUGIN=true webpack --progress --colors --display-error-details --config tools/webpack.client.js",
     "bundle:server": "run-s clean:tmp clean:server build:server",
     "bundle:client": "run-s clean:css clean:js clean:fonts build:client",
-    "prod:server": "cross-env NODE_ENV=production node server.js",
+    "prod:server": "cross-env NODE_ENV=production pm2 start server.js",
     "build:prod": "cross-env NODE_ENV=production run-s bundle:client bundle:server",
     "build:prod:rtl": "cross-env NODE_ENV=production RTL=true run-s bundle:client bundle:server",
     "prod": "run-s build:prod prod:server",
