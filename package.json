@@ -100,6 +100,7 @@
     "nodemailer": "^3.1.8",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "pm2": "^2.4.3",
     "pug": "^2.0.0-beta11",
     "qr-image": "^3.2.0",
     "qrcode": "^0.7.1",
