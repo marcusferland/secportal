@@ -31,10 +31,6 @@ export default class Signup extends React.Component {
   constructor(props, context) {
     super(props)
 
-    // user is already logged in (token is verified)
-    // redirect them to dashboard
-    if ( Auth.isUserAuthenticated() ) this.props.router.replace(::this.getPath('dashboard'))
-
     this.state = {
       errors: {},
       user: {
@@ -87,21 +83,8 @@ export default class Signup extends React.Component {
         secret: secret
       }), config)
       .then(response => {
-        if (response.data.token) {
-          date.setMinutes(date.getMinutes() + 15)
-
-          Cookie.save('token', response.data.token, {
-            domain: 'localhost',
-            expires: date,
-            maxAge: 900,
-            path: '/',
-            secure: false
-          })
+        if (response.data.token)
           this.props.router.push(::this.getPath('login'))
-        }
-        else {
-          // ...
-        }
       })
       .catch(error => {
         console.log(error)
