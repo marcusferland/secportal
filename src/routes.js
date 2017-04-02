@@ -16,7 +16,7 @@ import Auth from './common/auth'
 import Homepage from './routes/Homepage'
 
 import Dashboard from './routes/Dashboard'
-import Settings from './routes/Settings'
+import Security from './routes/Security'
 
 import Inbox from './routes/Inbox'
 import Mail from './routes/Mail'
@@ -135,7 +135,7 @@ class App extends React.Component {
 const routes = (
   <Route component={App}>
     <Route path='dashboard' component={Dashboard} onEnter={requireAuth} />
-    <Route path='settings' component={Settings} onEnter={requireAuth} />
+    <Route path='settings/security' component={Security} onEnter={requireAuth} />
     <Route path='mailbox/inbox' component={Inbox} onEnter={requireAuth} />
     <Route path='mailbox/mail' component={Mail} onEnter={requireAuth} />
     <Route path='mailbox/compose' component={Compose} onEnter={requireAuth} />

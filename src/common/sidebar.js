@@ -43,7 +43,11 @@ class ApplicationSidebar extends React.Component {
                   <SidebarNavItem glyph='icon-fontello-gauge' name='Dashboard' href={::this.getPath('dashboard')} />
                   <SidebarNavItem glyph='icon-ikons-bar-chart-2' name='Reports' href={::this.getPath('reports')} />
                   <SidebarNavItem glyph='icon-fontello-user-1' name='Profile' href={::this.getPath('social')} />
-                  <SidebarNavItem glyph='icon-simple-line-icons-settings' name='Settings' href={::this.getPath('settings')} />
+                  <SidebarNavItem glyph='icon-simple-line-icons-settings' name={<span>Settings <Label className='bg-darkgreen45 fg-white'>1</Label></span>}>
+                    <SidebarNav>
+                      <SidebarNavItem glyph='icon-feather-lock' name='Security' href={::this.getPath('settings/security')} />
+                    </SidebarNav>
+                  </SidebarNavItem>
                   <SidebarNavItem glyph='icon-feather-mail' name={<span>Mailbox <Label className='bg-darkgreen45 fg-white'>3</Label></span>}>
                     <SidebarNav>
                       <SidebarNavItem glyph='icon-feather-inbox' name='Inbox' href={::this.getPath('mailbox/inbox')} />

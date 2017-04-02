@@ -29,6 +29,31 @@ class Auth extends React.Component {
     return this.verifyToken(whichToken)
   }
 
+  static getUserId(whichToken = 'token') {
+    const verified = this.verifyToken()
+    return verified.sub.id
+  }
+
+  static getUserEmail(whichToken = 'token') {
+    const verified = this.verifyToken()
+    return verified.sub.email
+  }
+
+  static getUserName(whichToken = 'token') {
+    const verified = this.verifyToken()
+    return verified.sub.name
+  }
+
+  static getUserRole(whichToken = 'token') {
+    const verified = this.verifyToken()
+    return verified.sub.role
+  }
+
+  static getUserBackupTotp(whichToken = 'token') {
+    const verified = this.verifyToken()
+    return verified.sub.backup_totp
+  }
+
   /**
    * Deauthenticate a user. Remove a token from Local Storage.
    *
