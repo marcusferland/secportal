@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 import { Link, withRouter } from 'react-router'
-import Auth from '../common/auth'
 import cookie from 'react-cookie'
 import axios from 'axios'
 import querystring from 'querystring'
 import qr from 'qrcode'
 import speakeasy from 'speakeasy'
 import jwt from 'jsonwebtoken'
+
+import Auth from '../common/auth'
+import Config from '../common/config'
 
 import {
   Row,
@@ -35,10 +37,6 @@ export default class Totp extends React.Component {
 
   constructor(props, context) {
     super(props)
-
-    // user is attempting to access this page directly
-    // redirect them to login page
-    // if ( ! Auth.isUserAuthenticated('authed') ) this.props.router.replace(::this.getPath('login'))
 
     this.state = {
       errors: {},
@@ -83,6 +81,69 @@ export default class Totp extends React.Component {
   processForm(e) {
     e.preventDefault()
 
+    /**
+     * Check to see if user entered a recovery code
+     * If yes, authenticate and remove recovery code from {array} in MongoDB
+     * If no, prompt user to try again (with another recovery code?)
+     */
+    const reg = /^[0-9a-z]{5}\-[0-9a-z]{5}$/
+    if ( reg.test(this.state.user.totp) ) {
+
+      const tokenPayload = Auth.verifyToken('authed')
+
+      if ( ! tokenPayload) return false
+
+      const backupTotps = tokenPayload.user.backup_totp
+      const backupTotpsIndex = backupTotps.indexOf(this.state.user.totp)
+
+      if ( backupTotpsIndex !== -1 ) {
+        backupTotps.splice(backupTotpsIndex, 1)
+
+        // update MongoDB
+        const config = {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }
+
+        axios
+          .put('http://localhost:3001/auth/update/recovery_codes', querystring.stringify({
+            userid: Auth.getUserId('authed'),
+            totps:  backupTotps
+          }), config)
+          .then(response => {
+            if (response.data) {
+              return response.data
+            }
+          })
+          .catch(error => {})
+
+        const payload = {
+          user: tokenPayload.user
+        }
+
+        const token = jwt.sign(
+          payload,
+          Config.jwt.secret, {
+            expiresIn: Config.jwt.expiry
+          }
+        )
+
+        if (token) {
+          cookie.save('token', token, Config.cookies.config)
+          cookie.remove('authed', '/')
+
+          // good; send to dashboard
+          this.props.router.push(::this.getPath('dashboard'))
+          return
+        }
+        else {
+          ::this.alert('Not verified!')
+          return
+        }
+      }
+    }
+
     const verified = speakeasy.totp.verify({
       secret: Auth.verifyToken('authed').user.secret,
       encoding: 'base32',
@@ -92,40 +153,32 @@ export default class Totp extends React.Component {
     if (verified) {
       const tokenPayload = Auth.verifyToken('authed')
       const payload = {
-        sub: tokenPayload.sub,
-        sub: tokenPayload.user
+        user: tokenPayload.user
       }
 
       const token = jwt.sign(
         payload,
-        'rH!y+sZcK-_a TTZyDWjPGAJ q-RF&6-GW', {
-          expiresIn: 900
+        Config.jwt.secret, {
+          expiresIn: Config.jwt.expiry
         }
       )
 
       if (token) {
-
-        const date = new Date()
-        date.setMinutes(date.getMinutes() + 15)
-        cookie.save('token', token, {
-          domain: 'localhost',
-          expires: date,
-          maxAge: 900,
-          path: '/',
-          secure: false
-        })
-
+        cookie.save('token', token, Config.cookies.config)
         cookie.remove('authed', '/')
 
         // good; send to dashboard
         this.props.router.push(::this.getPath('dashboard'))
+        return
       }
       else {
         ::this.alert('Not verified!')
+        return
       }
     }
     else {
       ::this.alert('Not verified!')
+      return
     }
   }
 

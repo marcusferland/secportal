@@ -1,7 +1,11 @@
 import path from 'path'
+import mime from 'mime'
+import fs from 'fs'
+import http from 'http'
 import express from 'express'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 import cookie from 'react-cookie'
 import bearerToken from 'express-bearer-token'
 
@@ -20,6 +24,7 @@ app.use(compression({
   memLevel: 9
 }))
 app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(process.cwd(), 'public')))
 app.set('views', path.join(process.cwd(), 'views'))
 app.set('view engine', 'pug')

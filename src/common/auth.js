@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import Cookie from 'react-cookie'
 import speakeasy from 'speakeasy'
 
+import Config from './config'
+
 class Auth extends React.Component {
 
   componentDidMount() {
@@ -30,28 +32,30 @@ class Auth extends React.Component {
   }
 
   static getUserId(whichToken = 'token') {
-    const verified = this.verifyToken()
-    return verified.sub.id
+    const verified = this.verifyToken(whichToken)
+    return verified.user.id
   }
 
   static getUserEmail(whichToken = 'token') {
-    const verified = this.verifyToken()
-    return verified.sub.email
+    const verified = this.verifyToken(whichToken)
+    return verified.user.email
   }
 
   static getUserName(whichToken = 'token') {
-    const verified = this.verifyToken()
-    return verified.sub.name
+    const verified = this.verifyToken(whichToken)
+    return verified.user.name
   }
 
   static getUserRole(whichToken = 'token') {
-    const verified = this.verifyToken()
-    return verified.sub.role
+    const verified = this.verifyToken(whichToken)
+    return verified.user.role
   }
 
   static getUserBackupTotp(whichToken = 'token') {
-    const verified = this.verifyToken()
-    return verified.sub.backup_totp
+    const verified = this.verifyToken(whichToken)
+
+    if (verified) return verified.user.backup_totp
+    else return false
   }
 
   /**
@@ -101,7 +105,7 @@ class Auth extends React.Component {
 
     if (token) {
       try {
-        verified = jwt.verify(token, 'rH!y+sZcK-_a TTZyDWjPGAJ q-RF&6-GW')
+        verified = jwt.verify(token, Config.jwt.secret)
         return verified
       } catch (err) {
         return false

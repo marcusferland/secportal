@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 import { Link, withRouter } from 'react-router'
-import Auth from '../common/auth'
 import cookie from 'react-cookie'
 import axios from 'axios'
 import querystring from 'querystring'
 
+import Auth from '../common/auth'
+import Config from '../common/config'
 import Totp from '../routes/Totp'
 
 import {
@@ -77,15 +78,7 @@ class Login extends React.Component {
       }), config)
       .then(response => {
         if (response.data.token) {
-          date.setMinutes(date.getMinutes() + 15)
-
-          cookie.save('authed', response.data.token, {
-            domain: 'localhost',
-            expires: date,
-            maxAge: 900,
-            path: '/',
-            secure: false
-          })
+          cookie.save('authed', response.data.token, Config.cookies.config)
           this.props.router.push(::this.getPath('totp'))
         }
         else {
