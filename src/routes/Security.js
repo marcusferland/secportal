@@ -53,8 +53,8 @@ export default class Security extends React.Component {
    *
    * @return {string} delimited by "\n"
    */
-  copy(asdf = true) {
-    const clipboard = new Clipboard('.copy-to-clipboard', {
+  copy() {
+    new Clipboard('.copy-to-clipboard', {
       text: () => {
         return this.state.totps.join("\n")
       }

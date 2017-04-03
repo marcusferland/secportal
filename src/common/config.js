@@ -2,9 +2,9 @@
 
 let date = new Date()
 date = date.setMinutes(date.getMinutes() + expiryInMinutes)
-const ssl = false
-const expiryInSeconds = 900 // should equal expiryInMinutes
-const expiryInMinutes = 15 // should equal expiryInSeconds
+const ssl = process.env.SSL || false
+const expiryInSeconds = process.env.jwtExpiryInSeconds || 900 // should equal expiryInMinutes
+const expiryInMinutes = process.env.jwtExpiryInMinutes || 15 // should equal expiryInSeconds
 const host = process.env.HOST || 'localhost'
 const port = process.env.PORT || 8080
 
