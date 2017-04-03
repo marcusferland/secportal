@@ -1,18 +1,16 @@
-import React from 'react'
-import { withRouter } from 'react-router'
+'use strict'
 
-@withRouter
-export default class Utils extends React.Component {
-
-  /**
-   * Gets path
-   *
-   * @param {string} path
-   * @return {string}
-   */
-  static getPath(path) {
-    const dir = this.props.location.pathname.search('rtl') !== -1 ? 'rtl' : 'ltr';
-    path = `/${dir}/${path}`;
-    return path;
+/**
+ * Generates a list of 16 recovery codes in the case the user doesn't have
+ * access to their device, ie. smart phone, etc.
+ *
+ * @return {array} ex. [ 1dpwa-dm022, 82nzw-q5y60, ... ]
+ */
+module.exports.calcBackupTotpNumbers = () => {
+  const list = []
+	for (let num = 0; num < 16; num++) {
+  	list.push( Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(1, 5) + '-' +
+               Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(1, 5) )
   }
+  return list
 }

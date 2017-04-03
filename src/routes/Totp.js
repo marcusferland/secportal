@@ -81,6 +81,9 @@ export default class Totp extends React.Component {
   processForm(e) {
     e.preventDefault()
 
+    const tokenPayload = Auth.verifyToken('authed')
+    if ( ! tokenPayload) return this.props.router.push(::this.getPath('login'))
+
     /**
      * Check to see if user entered a recovery code
      * If yes, authenticate and remove recovery code from {array} in MongoDB
@@ -88,10 +91,6 @@ export default class Totp extends React.Component {
      */
     const reg = /^[0-9a-z]{5}\-[0-9a-z]{5}$/
     if ( reg.test(this.state.user.totp) ) {
-
-      const tokenPayload = Auth.verifyToken('authed')
-
-      if ( ! tokenPayload) return false
 
       const backupTotps = tokenPayload.user.backup_totp
       const backupTotpsIndex = backupTotps.indexOf(this.state.user.totp)
@@ -151,7 +150,6 @@ export default class Totp extends React.Component {
     })
 
     if (verified) {
-      const tokenPayload = Auth.verifyToken('authed')
       const payload = {
         user: tokenPayload.user
       }

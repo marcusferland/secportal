@@ -6,6 +6,7 @@ import querystring from 'querystring'
 import fileDownload from 'react-file-download'
 
 import Auth from '../common/auth'
+import { calcBackupTotpNumbers } from '../common/utils'
 
 import {
   Row,
@@ -83,8 +84,20 @@ export default class Security extends React.Component {
     const arr = []
     let counter = 1
 
-    return totps.map((totp) => {
+    return totps.map(totp => {
       return <li key={counter++} className='two-factor-recovery-code'>{totp}</li>
+    })
+  }
+
+  /**
+   * Create new {array} set of recovery codes for totp
+   * TODO: Update MongoDB and token (should be removed from token)
+   *
+   * @return {boolean}
+   */
+  generateNewRecoveryCodes() {
+    this.setState({
+      totps: calcBackupTotpNumbers()
     })
   }
 
@@ -130,7 +143,7 @@ export default class Security extends React.Component {
                   <Col xs={12} style={{paddingBottom: 20}}>
                     <h4 style={{fontWeight: 700, marginTop: 40}}>Generate new recovery codes</h4>
                     <p>When you generate new recovery codes, you must download or print the new codes. Your old codes won’t work anymore. This action is <b>not reversible</b>.</p>
-                    <Button outlined lg bsStyle='blue' onClick={::this.print}><Icon glyph='icon-fontello-arrows-ccw' /> Generate new recovery codes</Button>
+                    <Button outlined lg bsStyle='blue' onClick={::this.generateNewRecoveryCodes}><Icon glyph='icon-fontello-arrows-ccw' /> Generate new recovery codes</Button>
                   </Col>
                 </Row>
               </Grid>

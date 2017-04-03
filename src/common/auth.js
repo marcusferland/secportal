@@ -18,6 +18,9 @@ class Auth extends React.Component {
     }
   }
 
+  /**
+   * @return {string}
+   */
   static generate2FASecret() {
     return speakeasy.generateSecret({ length: 20 })
   }
@@ -25,32 +28,47 @@ class Auth extends React.Component {
   /**
    * Check if a user is authenticated - check if a token is saved in Local Storage
    *
-   * @returns {boolean}
+   * @return {boolean}
    */
   static isUserAuthenticated(whichToken = 'token') {
     return this.verifyToken(whichToken)
   }
 
+  /**
+   * @return {int}
+   */
   static getUserId(whichToken = 'token') {
     const verified = this.verifyToken(whichToken)
     return verified.user.id
   }
 
+  /**
+   * @return {string}
+   */
   static getUserEmail(whichToken = 'token') {
     const verified = this.verifyToken(whichToken)
     return verified.user.email
   }
 
+  /**
+   * @return {string}
+   */
   static getUserName(whichToken = 'token') {
     const verified = this.verifyToken(whichToken)
     return verified.user.name
   }
 
+  /**
+   * @return {string}
+   */
   static getUserRole(whichToken = 'token') {
     const verified = this.verifyToken(whichToken)
     return verified.user.role
   }
 
+  /**
+   * @return {array}
+   */
   static getUserBackupTotp(whichToken = 'token') {
     const verified = this.verifyToken(whichToken)
 
