@@ -1,11 +1,11 @@
 {
   "private": true,
   "name": "demo",
-  "version": "4.1.0",
-  "description": "Rubix Demo",
+  "version": "2.1.0",
+  "description": "Security Portal",
   "homepage": "https://rubix410.sketchpixy.com/",
   "engines": {
-    "node": "7.7.4"
+    "node": "7.8.0"
   },
   "watch": {
     "dev:server": "tmp/bundle.js"
