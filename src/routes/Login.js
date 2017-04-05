@@ -77,15 +77,17 @@ class Login extends React.Component {
         password: password
       }), config)
       .then(response => {
-        if (response.data.token) {
-          cookie.save('authed', response.data.token, Config.cookies.config)
-          this.props.router.push(::this.getPath('totp'))
+        if (response.data.success == true) {
+          if (response.data.token) {
+            cookie.save('authed', response.data.token, Config.cookies.config)
+            this.props.router.push(::this.getPath('totp'))
+          }
         }
-        else {
-          // ...
-        }
+        else {}
       })
-      .catch(error => {})
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   /**
