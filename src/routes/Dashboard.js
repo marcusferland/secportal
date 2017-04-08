@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import D3Funnel from 'd3-funnel'
 
 import {
   Row,
@@ -26,7 +28,7 @@ import {
   FormControl,
   PanelContainer,
   PanelTabContainer,
-} from '@sketchpixy/rubix';
+} from '@sketchpixy/rubix'
 
 class Contact extends React.Component {
   constructor(props) {
@@ -59,6 +61,121 @@ class Contact extends React.Component {
           </Button>
         </td>
       </tr>
+    );
+  }
+}
+
+class FunnelChart extends React.Component {
+  componentDidMount() {
+    Highcharts.setOptions({
+      colors: ['#2EB398', '#EA7882', '#79B0EC', '#FFC497', '#68A0A5'],
+      lang: {
+        thousandsSep: ','
+      }
+    })
+    Highcharts.chart('funnel', {
+      chart: {
+        type: 'funnel',
+        marginRight: 100
+      },
+      title: {
+        text: null
+      },
+      plotOptions: {
+        series: {
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b> ({point.y:,.0f})',
+            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+            softConnector: true
+          },
+          neckWidth: '30%',
+          neckHeight: '25%'
+
+          //-- Other available options
+          // height: pixels or percent
+          // width: pixels or percent
+        }
+      },
+      legend: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      series: [{
+        name: 'Funnel Chart',
+        data: [
+          ['Raw Events', 25654],
+          ['Filtered Events', 8624],
+          ['Auto Notifications', 1987],
+          ['Sent Alerts', 976],
+          ['Escalated Events', 543]
+        ]
+      }],
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 399
+          },
+          chartOptions: {
+            legend: {
+              align: 'center',
+              verticalAlign: 'bottom',
+              layout: 'horizontal'
+            },
+            yAxis: {
+              labels: {
+                align: 'center',
+                x: 0,
+                y: -5
+              },
+              title: {
+                text: null
+              }
+            },
+            subtitle: {
+              text: null
+            },
+            credits: {
+              enabled: false
+            }
+          }
+        }]
+      }
+    })
+    /** const data = [
+      ['Raw Events', 129653],
+      ['Filtered Events', 99864],
+      ['Sent Alerts', 15234],
+      ['Escalated Events', 50],
+    ];
+    const options = {
+      block: {
+        dynamicHeight: false
+      },
+      chart:{
+        height: '95%',
+        width: '100%',
+        bottomPinch: 1
+      },
+      label: {
+        format: "{l}:\n{f}"
+      }
+    }
+    const chart = new D3Funnel('#funnel')
+    chart.draw(data, options) */
+  }
+  render() {
+    return (
+      <PanelBody style={{paddingTop: 10}}>
+        <div id='funnel' style={{
+          maxWidth: '600px',
+          height: '100%',
+          margin: '0 0 0 -25px',
+          paddingBottom: '10px'
+        }}></div>
+      </PanelBody>
     );
   }
 }
@@ -889,9 +1006,101 @@ class MapPanel extends React.Component {
 }
 
 export default class Dashboard extends React.Component {
+  componentDidMount() {
+    (function() {
+      const dynamic_data = {
+        nasdaq_prices: [4415.49,4440.42,4416.39,4425.97,4363.45,4432.15,4424.70,4456.02,4473.70,4472.11,4449.56,4444.91,4442.70,4462.90,4369.77,4352.64,4383.89,4352.84,4355.05,4334.97,4370.90,4401.33,4389.25,4434.13,4453.00,4464.93,4508.31,4527.51,4526.48,4532.10],
+      }
+      $(ReactDOM.findDOMNode(this.refs.nasdaq)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
+      $(ReactDOM.findDOMNode(this.refs.nasdaq2)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
+      $(ReactDOM.findDOMNode(this.refs.nasdaq3)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
+      $(ReactDOM.findDOMNode(this.refs.nasdaq4)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
+    }.bind(this))()
+  }
   render() {
     return (
       <div className='dashboard'>
+        <Row style={{lineHeight: 1}}>
+          <Col sm={3} className='text-center'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: '25px'}}>
+                  <div style={{
+                    color: 'black',
+                    display: 'block',
+                    fontSize: '50px',
+                    fontWeight: 100
+                  }}>126K</div>
+                  <div style={{marginBottom: '10px'}}>Raw Events</div>
+                  <div ref='nasdaq'></div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+          <Col sm={3} className='text-center'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: '25px'}}>
+                  <div style={{
+                    color: 'black',
+                    display: 'block',
+                    fontSize: '50px',
+                    fontWeight: 100
+                  }}>112K</div>
+                  <div style={{marginBottom: '10px'}}>Filtered Events</div>
+                  <div ref='nasdaq2'></div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+          <Col sm={3} className='text-center'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: '25px'}}>
+                  <div style={{
+                    color: 'black',
+                    display: 'block',
+                    fontSize: '50px',
+                    fontWeight: 100
+                  }}>704</div>
+                  <div style={{marginBottom: '10px'}}>Sent Alerts</div>
+                  <div ref='nasdaq3'></div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+          <Col sm={3} className='text-center'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: '25px'}}>
+                  <div style={{
+                    color: 'black',
+                    display: 'block',
+                    fontSize: '50px',
+                    fontWeight: 100
+                  }}>22</div>
+                  <div style={{marginBottom: '10px'}}>Escalated Events</div>
+                  <div ref='nasdaq4'></div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={5} collapseRight>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: 0}}>
+                  <Grid>
+                    <Row>
+                      <FunnelChart />
+                    </Row>
+                  </Grid>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+        </Row>
         <Row>
           <Col sm={12}>
             <PanelTabContainer id='dashboard-main' defaultActiveKey="demographics">

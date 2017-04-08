@@ -9,6 +9,9 @@ import "js/vendor/prism/prism.js";
 import "js/vendor/select2/select2.js";
 import 'js/vendor/timeline/timeline.js';
 import "js/vendor/ion.rangeSlider/ion.rangeSlider.js";
+import "js/vendor/highcharts/highcharts.min.js";
+import "js/vendor/highcharts/funnel.min.js";
+import "js/vendor/highcharts/exporting.min.js";
 
 import 'bower_components/d3/d3.js';
 import "bower_components/c3/c3.js";
