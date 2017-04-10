@@ -68,7 +68,7 @@ class Contact extends React.Component {
 class FunnelChart extends React.Component {
   componentDidMount() {
     Highcharts.setOptions({
-      colors: ['#2EB398', '#EA7882', '#79B0EC', '#FFC497', '#68A0A5'],
+      colors: ['#2EB398', '#EA7882', '#4C9AF1', '#FFC497', '#68A0A5'],
       lang: {
         thousandsSep: ','
       }
@@ -108,7 +108,7 @@ class FunnelChart extends React.Component {
         data: [
           ['Raw Events', 25654],
           ['Filtered Events', 8624],
-          ['Auto Notifications', 1987],
+          ['Filtered Events', 2568],
           ['Sent Alerts', 976],
           ['Escalated Events', 543]
         ]
@@ -1006,22 +1006,109 @@ class MapPanel extends React.Component {
 }
 
 export default class Dashboard extends React.Component {
+  constructor(props, context) {
+    super()
+    this.state = {
+      raw_events: {
+        total: '',
+        low: '',
+        high: ''
+      },
+      filtered_events: {
+        total: '',
+        low: '',
+        high: ''
+      },
+      auto_notifications: {
+        total: '',
+        low: '',
+        high: ''
+      },
+      sent_alerts: {
+        total: '',
+        low: '',
+        high: ''
+      },
+      escalated_events: {
+        total: '',
+        low: '',
+        high: ''
+      }
+    }
+  }
+  nFormatter(num = 0) {
+    if (num >= 1000000000)
+      return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G'
+
+    if (num >= 1000000)
+      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+
+    if (num >= 1000)
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+
+    return num
+  }
+  averageCounts(arr) {
+    const count = arr.length
+    arr = arr.reduce((previous, current) => current += previous)
+    return this.nFormatter( parseInt(arr /= count) )
+  }
+  randomFloatBetween(minValue, maxValue, precision = 2) {
+    const arr = []
+    for (let i = 0; i <= 20; i++) {
+      arr.push( parseInt( Math.min(minValue + (Math.random() * (maxValue - minValue)), maxValue).toFixed(precision) ) )
+    }
+    return arr
+  }
+  updateState(key, value, stateObj) {
+    stateObj[key] = value
+
+    this.setState({
+      stateObj
+    })
+  }
   componentDidMount() {
     (function() {
       const dynamic_data = {
-        nasdaq_prices: [4415.49,4440.42,4416.39,4425.97,4363.45,4432.15,4424.70,4456.02,4473.70,4472.11,4449.56,4444.91,4442.70,4462.90,4369.77,4352.64,4383.89,4352.84,4355.05,4334.97,4370.90,4401.33,4389.25,4434.13,4453.00,4464.93,4508.31,4527.51,4526.48,4532.10],
+        raw_events: this.randomFloatBetween(100000, 200000),
+        filtered_events: this.randomFloatBetween(100000, 200000),
+        auto_notifications: this.randomFloatBetween(1000, 10000),
+        sent_alerts: this.randomFloatBetween(500, 1000),
+        escalated_events: this.randomFloatBetween(0, 100),
       }
-      $(ReactDOM.findDOMNode(this.refs.nasdaq)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
-      $(ReactDOM.findDOMNode(this.refs.nasdaq2)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
-      $(ReactDOM.findDOMNode(this.refs.nasdaq3)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
-      $(ReactDOM.findDOMNode(this.refs.nasdaq4)).sparkline(dynamic_data.nasdaq_prices, {composite: false, height: '1.3em', fillColor:false, lineColor:'#7CD5BA', tooltipPrefix: 'Index: '})
+
+      this.updateState('total', this.nFormatter(dynamic_data.raw_events[dynamic_data.raw_events.length - 1]), this.state.raw_events)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.raw_events) ), this.state.raw_events)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.raw_events) ), this.state.raw_events)
+
+      this.updateState('total', this.nFormatter(dynamic_data.filtered_events[dynamic_data.filtered_events.length - 1]), this.state.filtered_events)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.filtered_events) ), this.state.filtered_events)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.filtered_events) ), this.state.filtered_events)
+
+      this.updateState('total', this.nFormatter(dynamic_data.auto_notifications[dynamic_data.auto_notifications.length - 1]), this.state.auto_notifications)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
+
+      this.updateState('total', this.nFormatter(dynamic_data.sent_alerts[dynamic_data.sent_alerts.length - 1]), this.state.sent_alerts)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.sent_alerts) ), this.state.sent_alerts)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.sent_alerts) ), this.state.sent_alerts)
+
+      this.updateState('total', this.nFormatter(dynamic_data.escalated_events[dynamic_data.escalated_events.length - 1]), this.state.escalated_events)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
+
+      $(ReactDOM.findDOMNode(this.refs.raw_events)).sparkline(dynamic_data.raw_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.filtered_events)).sparkline(dynamic_data.filtered_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.auto_notifications)).sparkline(dynamic_data.auto_notifications, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.sent_alerts)).sparkline(dynamic_data.sent_alerts, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.escalated_events)).sparkline(dynamic_data.escalated_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
     }.bind(this))()
   }
   render() {
     return (
       <div className='dashboard'>
         <Row style={{lineHeight: 1}}>
-          <Col sm={3} className='text-center'>
+          <Col className='col-sm-2_5 text-center'>
             <PanelContainer>
               <Panel>
                 <PanelBody style={{padding: '25px'}}>
@@ -1030,14 +1117,18 @@ export default class Dashboard extends React.Component {
                     display: 'block',
                     fontSize: '50px',
                     fontWeight: 100
-                  }}>126K</div>
-                  <div style={{marginBottom: '10px'}}>Raw Events</div>
-                  <div ref='nasdaq'></div>
+                  }}>{this.state.raw_events.total}</div>
+                  <div style={{marginBottom: '25px'}}>Raw Events</div>
+                  <div ref='raw_events'></div>
+                  <div style={{paddingTop: '25px'}}>
+                    <div className='text-left pull-left'>Low <b>{this.state.raw_events.low}</b></div>
+                    <div className='text-right pull-right'>High <b>{this.state.raw_events.high}</b></div>
+                  </div>
                 </PanelBody>
               </Panel>
             </PanelContainer>
           </Col>
-          <Col sm={3} className='text-center'>
+          <Col className='col-sm-2_5 text-center'>
             <PanelContainer>
               <Panel>
                 <PanelBody style={{padding: '25px'}}>
@@ -1046,14 +1137,18 @@ export default class Dashboard extends React.Component {
                     display: 'block',
                     fontSize: '50px',
                     fontWeight: 100
-                  }}>112K</div>
-                  <div style={{marginBottom: '10px'}}>Filtered Events</div>
-                  <div ref='nasdaq2'></div>
+                  }}>{this.state.filtered_events.total}</div>
+                  <div style={{marginBottom: '25px'}}>Filtered Events</div>
+                  <div ref='filtered_events'></div>
+                  <div style={{paddingTop: '25px'}}>
+                    <div className='text-left pull-left'>Low <b>{this.state.filtered_events.low}</b></div>
+                    <div className='text-right pull-right'>High <b>{this.state.filtered_events.high}</b></div>
+                  </div>
                 </PanelBody>
               </Panel>
             </PanelContainer>
           </Col>
-          <Col sm={3} className='text-center'>
+          <Col className='col-sm-2_5 text-center'>
             <PanelContainer>
               <Panel>
                 <PanelBody style={{padding: '25px'}}>
@@ -1062,14 +1157,18 @@ export default class Dashboard extends React.Component {
                     display: 'block',
                     fontSize: '50px',
                     fontWeight: 100
-                  }}>704</div>
-                  <div style={{marginBottom: '10px'}}>Sent Alerts</div>
-                  <div ref='nasdaq3'></div>
+                  }}>{this.state.auto_notifications.total}</div>
+                  <div style={{marginBottom: '25px'}}>Automatic Notifications</div>
+                  <div ref='auto_notifications'></div>
+                  <div style={{paddingTop: '25px'}}>
+                    <div className='text-left pull-left'>Low <b>{this.state.auto_notifications.low}</b></div>
+                    <div className='text-right pull-right'>High <b>{this.state.auto_notifications.high}</b></div>
+                  </div>
                 </PanelBody>
               </Panel>
             </PanelContainer>
           </Col>
-          <Col sm={3} className='text-center'>
+          <Col className='col-sm-2_5 text-center'>
             <PanelContainer>
               <Panel>
                 <PanelBody style={{padding: '25px'}}>
@@ -1078,9 +1177,33 @@ export default class Dashboard extends React.Component {
                     display: 'block',
                     fontSize: '50px',
                     fontWeight: 100
-                  }}>22</div>
-                  <div style={{marginBottom: '10px'}}>Escalated Events</div>
-                  <div ref='nasdaq4'></div>
+                  }}>{this.state.sent_alerts.total}</div>
+                  <div style={{marginBottom: '25px'}}>Sent Alerts</div>
+                  <div ref='sent_alerts'></div>
+                  <div style={{paddingTop: '25px'}}>
+                    <div className='text-left pull-left'>Low <b>{this.state.sent_alerts.low}</b></div>
+                    <div className='text-right pull-right'>High <b>{this.state.sent_alerts.high}</b></div>
+                  </div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+          <Col className='col-sm-2_5 text-center'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody style={{padding: '25px'}}>
+                  <div style={{
+                    color: 'black',
+                    display: 'block',
+                    fontSize: '50px',
+                    fontWeight: 100
+                  }}>{this.state.escalated_events.total}</div>
+                  <div style={{marginBottom: '25px'}}>Escalated Events</div>
+                  <div ref='escalated_events'></div>
+                  <div style={{paddingTop: '25px'}}>
+                    <div className='text-left pull-left'>Low <b>{this.state.escalated_events.low}</b></div>
+                    <div className='text-right pull-right'>High <b>{this.state.escalated_events.high}</b></div>
+                  </div>
                 </PanelBody>
               </Panel>
             </PanelContainer>

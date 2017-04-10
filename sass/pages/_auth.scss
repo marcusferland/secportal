@@ -6,6 +6,17 @@ html.authentication {
   }
 }
 
+@media (min-width: $screen-sm-min) {
+  .login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-width: 500px;
+    transform: translate(-50%, -50%);
+    width: auto;
+  }
+}
+
 #auth-container {
   top: 0;
   left: 0;
@@ -14,7 +25,7 @@ html.authentication {
   display: block;
   overflow: auto;
   position: fixed;
-  background: #43525A;
+  background: #43525A url(/imgs/common/background.jpg);
 }
 
 #auth-row {

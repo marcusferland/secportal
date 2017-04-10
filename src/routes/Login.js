@@ -113,13 +113,13 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div id='auth-container' className='login' style={{backgroundImage: "url(/imgs/common/background.jpg)"}}>
+      <div id='auth-container' className='login'>
         <div id='auth-row'>
           <div id='auth-cell'>
             <Grid>
               <Row>
                 <Col sm={4} smOffset={4} xs={10} xsOffset={1} collapseLeft collapseRight>
-                  <PanelContainer controls={false}>
+                  <PanelContainer controls={false} className='login-container'>
                     <Panel>
                       <PanelBody style={{padding: 0}}>
                         <div className='text-center bg-esentire fg-white'>
