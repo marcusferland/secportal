@@ -15,16 +15,12 @@ import {
   Icon,
   Grid,
   Form,
-  Badge,
   Panel,
   Button,
   PanelBody,
   FormGroup,
-  LoremIpsum,
   InputGroup,
   FormControl,
-  ButtonGroup,
-  ButtonToolbar,
   PanelContainer,
 } from '@sketchpixy/rubix'
 
