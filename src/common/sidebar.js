@@ -1,11 +1,16 @@
 import React from 'react'
 
 import {
-  Sidebar, SidebarNav, SidebarNavItem,
-  SidebarControls, SidebarControlBtn,
-  LoremIpsum, Grid, Row, Col, FormControl,
-  Label, Progress, Icon,
-  SidebarDivider
+  Row,
+  Col,
+  Grid,
+  Icon,
+  Label,
+  Sidebar,
+  Progress,
+  SidebarNav,
+  FormControl,
+  SidebarNavItem
 } from '@sketchpixy/rubix'
 
 import { Link, withRouter } from 'react-router'
