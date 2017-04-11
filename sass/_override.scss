@@ -47,16 +47,3 @@ hr {
     text-align: left;
   }
 }
-
-.col-sm-2_5 {
-  float: left;
-  min-height: 1px;
-  padding: 0 25px;
-  position: relative;
-  width: 100%;
-}
-@media (min-width: 990px) {
-  .col-sm-2_5 {
-    width: 20%;
-  }
-}
