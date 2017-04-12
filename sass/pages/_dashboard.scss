@@ -61,9 +61,22 @@
       }
     }
 
-    @media (min-width: 990px) {
+    @media (min-width: $screen-tablet-min) {
+      .col-sm-2_5 {
+        width: 50%;
+
+        &:nth-child(even) {
+          border-left: 1px $border-default-color solid;
+        }
+      }
+    }
+    @media (min-width: $screen-laptop-lg-min) {
       .col-sm-2_5 {
         width: 20%;
+
+        &:nth-child(even) {
+          border-left: 0;
+        }
 
         .rubix-panel-container {
           border: 1px $border-default-color solid;

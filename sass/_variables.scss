@@ -21,9 +21,25 @@ $sidebar-controls-visibility: visible;
 $font-family-sans-serif:  Lato, sans-serif;
 $headings-font-family: Lato, sans-serif;
 
+$screen-mobile-sm-min: 320px;
+$screen-mobile-md-min: 375px;
+$screen-mobile-lg-min: 425px;
+$screen-tablet-min: 768px;
+$screen-laptop-min: 1024px;
+$screen-laptop-lg-min: 1440px;
+$screen-4k-min: 2560px;
+
 $screen-sm-min: 990px;
 $screen-md-min: 1152px;
 $screen-lg-min: 1366px;
+
+$screen-mobile-sm-max: ($screen-mobile-sm-min - 1);
+$screen-mobile-md-max: ($screen-mobile-md-min - 1);
+$screen-mobile-lg-max: ($screen-mobile-lg-min - 1);
+$screen-tablet-max: ($screen-tablet-min - 1);
+$screen-laptop-max: ($screen-laptop-min - 1);
+$screen-laptop-lg-max: ($screen-laptop-lg-min - 1);
+$screen-4k-max: ($screen-4k-min - 1);
 
 $screen-xs-max: ($screen-sm-min - 1);
 $screen-sm-max: ($screen-md-min - 1);
