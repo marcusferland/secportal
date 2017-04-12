@@ -169,12 +169,12 @@ export default class Dashboard extends React.Component {
   constructor(props, context) {
     super()
     this.state = {
-      raw_events: {
+      threats: {
         total: '',
         low: '',
         high: ''
       },
-      filtered_events: {
+      disrupted_connections: {
         total: '',
         low: '',
         high: ''
@@ -184,7 +184,7 @@ export default class Dashboard extends React.Component {
         low: '',
         high: ''
       },
-      sent_alerts: {
+      messages: {
         total: '',
         low: '',
         high: ''
@@ -230,37 +230,37 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     (function() {
       const dynamic_data = {
-        raw_events: this.randomFloatBetween(100000, 200000),
-        filtered_events: this.randomFloatBetween(100000, 200000),
+        threats: this.randomFloatBetween(100000, 200000),
+        disrupted_connections: this.randomFloatBetween(100000, 200000),
         auto_notifications: this.randomFloatBetween(1000, 10000),
-        sent_alerts: this.randomFloatBetween(500, 1000),
+        messages: this.randomFloatBetween(500, 1000),
         escalated_events: this.randomFloatBetween(0, 100),
       }
 
-      this.updateState('total', this.nFormatter(dynamic_data.raw_events[dynamic_data.raw_events.length - 1]), this.state.raw_events)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.raw_events) ), this.state.raw_events)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.raw_events) ), this.state.raw_events)
+      this.updateState('total', this.nFormatter(dynamic_data.threats[dynamic_data.threats.length - 1]), this.state.threats)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.threats) ), this.state.threats)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.threats) ), this.state.threats)
 
-      this.updateState('total', this.nFormatter(dynamic_data.filtered_events[dynamic_data.filtered_events.length - 1]), this.state.filtered_events)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.filtered_events) ), this.state.filtered_events)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.filtered_events) ), this.state.filtered_events)
+      this.updateState('total', this.nFormatter(dynamic_data.disrupted_connections[dynamic_data.disrupted_connections.length - 1]), this.state.disrupted_connections)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
 
       this.updateState('total', this.nFormatter(dynamic_data.auto_notifications[dynamic_data.auto_notifications.length - 1]), this.state.auto_notifications)
       this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
       this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
 
-      this.updateState('total', this.nFormatter(dynamic_data.sent_alerts[dynamic_data.sent_alerts.length - 1]), this.state.sent_alerts)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.sent_alerts) ), this.state.sent_alerts)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.sent_alerts) ), this.state.sent_alerts)
+      this.updateState('total', this.nFormatter(dynamic_data.messages[dynamic_data.messages.length - 1]), this.state.messages)
+      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.messages) ), this.state.messages)
+      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.messages) ), this.state.messages)
 
       this.updateState('total', this.nFormatter(dynamic_data.escalated_events[dynamic_data.escalated_events.length - 1]), this.state.escalated_events)
       this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
       this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
 
-      $(ReactDOM.findDOMNode(this.refs.raw_events)).sparkline(dynamic_data.raw_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.filtered_events)).sparkline(dynamic_data.filtered_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.threats)).sparkline(dynamic_data.threats, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.disrupted_connections)).sparkline(dynamic_data.disrupted_connections, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
       $(ReactDOM.findDOMNode(this.refs.auto_notifications)).sparkline(dynamic_data.auto_notifications, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.sent_alerts)).sparkline(dynamic_data.sent_alerts, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+      $(ReactDOM.findDOMNode(this.refs.messages)).sparkline(dynamic_data.messages, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
       $(ReactDOM.findDOMNode(this.refs.escalated_events)).sparkline(dynamic_data.escalated_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
     }.bind(this))()
   }
@@ -278,12 +278,12 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.raw_events.total}</div>
-                    <div style={{marginBottom: '25px'}}>Raw Events</div>
-                    <div ref='raw_events'></div>
+                    }}>{this.state.threats.total}</div>
+                    <div style={{marginBottom: '25px'}}>Threats</div>
+                    <div ref='threats'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.raw_events.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.raw_events.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.threats.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.threats.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
@@ -298,12 +298,12 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.filtered_events.total}</div>
-                    <div style={{marginBottom: '25px'}}>Filtered Events</div>
-                    <div ref='filtered_events'></div>
+                    }}>{this.state.disrupted_connections.total}</div>
+                    <div style={{marginBottom: '25px'}}>Disrupted Connections</div>
+                    <div ref='disrupted_connections'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.filtered_events.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.filtered_events.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.disrupted_connections.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.disrupted_connections.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
@@ -338,12 +338,12 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.sent_alerts.total}</div>
-                    <div style={{marginBottom: '25px'}}>Sent Alerts</div>
-                    <div ref='sent_alerts'></div>
+                    }}>{this.state.messages.total}</div>
+                    <div style={{marginBottom: '25px'}}>Messages</div>
+                    <div ref='messages'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.sent_alerts.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.sent_alerts.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.messages.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.messages.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
