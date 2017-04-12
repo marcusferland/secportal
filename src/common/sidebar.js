@@ -48,7 +48,7 @@ class ApplicationSidebar extends React.Component {
                   <div className='sidebar-header'>PAGES</div>
 
                   <SidebarNavItem glyph='icon-fontello-gauge' name='Dashboard' href={::this.getPath('dashboard')} />
-                  <SidebarNavItem glyph='icon-fontello-cog-1' name={<span>Settings <Label className='bg-darkgreen45 fg-white'>1</Label></span>}>
+                  <SidebarNavItem glyph='icon-fontello-cog-1' name='Settings'>
                     <SidebarNav>
                       <SidebarNavItem glyph='icon-feather-lock' name='Security' href={::this.getPath('settings/security')} />
                     </SidebarNav>
