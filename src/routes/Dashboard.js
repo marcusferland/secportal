@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import D3Funnel from 'd3-funnel'
+import axios from 'axios'
 
 import {
   Row,
@@ -208,18 +209,15 @@ export default class Dashboard extends React.Component {
 
     return num
   }
-  averageCounts(arr) {
-    const count = arr.length
-    arr = arr.reduce((previous, current) => current += previous)
-    return this.nFormatter( parseInt(arr /= count) )
-  }
-  randomFloatBetween(minValue, maxValue, precision = 2) {
+
+  randomFloatBetween(minValue, maxValue, precision = 2, num = 30) {
     const arr = []
-    for (let i = 0; i <= 20; i++) {
+    for (let i = 0; i <= num; i++) {
       arr.push( parseInt( Math.min(minValue + (Math.random() * (maxValue - minValue)), maxValue).toFixed(precision) ) )
     }
     return arr
   }
+
   updateState(key, value, stateObj) {
     stateObj[key] = value
 
@@ -227,42 +225,53 @@ export default class Dashboard extends React.Component {
       stateObj
     })
   }
+
   componentDidMount() {
-    (function() {
-      const dynamic_data = {
-        threats: this.randomFloatBetween(100000, 200000),
-        disrupted_connections: this.randomFloatBetween(100000, 200000),
-        auto_notifications: this.randomFloatBetween(1000, 10000),
-        messages: this.randomFloatBetween(500, 1000),
-        escalated_events: this.randomFloatBetween(0, 100),
-      }
+    let threats = {}
+    axios
+      .get('http://localhost:3002/api/v1/threats/total')
+      .then(response => {
+        if (response.status == 200) {
+          threats = {
+            count: response.data.count
+          }
 
-      this.updateState('total', this.nFormatter(dynamic_data.threats[dynamic_data.threats.length - 1]), this.state.threats)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.threats) ), this.state.threats)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.threats) ), this.state.threats)
+          const dynamic_data = {
+            threats: this.randomFloatBetween(100000, 200000),
+            disrupted_connections: this.randomFloatBetween(100000, 200000),
+            auto_notifications: this.randomFloatBetween(1000, 10000),
+            messages: this.randomFloatBetween(500, 1000),
+            escalated_events: this.randomFloatBetween(0, 100),
+          }
 
-      this.updateState('total', this.nFormatter(dynamic_data.disrupted_connections[dynamic_data.disrupted_connections.length - 1]), this.state.disrupted_connections)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
+          this.updateState('total', this.nFormatter(dynamic_data.threats[dynamic_data.threats.length - 1]), this.state.threats)
+          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.threats) ), this.state.threats)
+          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.threats) ), this.state.threats)
 
-      this.updateState('total', this.nFormatter(dynamic_data.auto_notifications[dynamic_data.auto_notifications.length - 1]), this.state.auto_notifications)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
+          this.updateState('total', this.nFormatter(dynamic_data.disrupted_connections[dynamic_data.disrupted_connections.length - 1]), this.state.disrupted_connections)
+          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
+          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
 
-      this.updateState('total', this.nFormatter(dynamic_data.messages[dynamic_data.messages.length - 1]), this.state.messages)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.messages) ), this.state.messages)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.messages) ), this.state.messages)
+          this.updateState('total', this.nFormatter(dynamic_data.auto_notifications[dynamic_data.auto_notifications.length - 1]), this.state.auto_notifications)
+          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
+          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
 
-      this.updateState('total', this.nFormatter(dynamic_data.escalated_events[dynamic_data.escalated_events.length - 1]), this.state.escalated_events)
-      this.updateState('low', this.nFormatter( Math.min.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
-      this.updateState('high', this.nFormatter( Math.max.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
+          this.updateState('total', this.nFormatter(dynamic_data.messages[dynamic_data.messages.length - 1]), this.state.messages)
+          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.messages) ), this.state.messages)
+          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.messages) ), this.state.messages)
 
-      $(ReactDOM.findDOMNode(this.refs.threats)).sparkline(dynamic_data.threats, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.disrupted_connections)).sparkline(dynamic_data.disrupted_connections, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.auto_notifications)).sparkline(dynamic_data.auto_notifications, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.messages)).sparkline(dynamic_data.messages, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-      $(ReactDOM.findDOMNode(this.refs.escalated_events)).sparkline(dynamic_data.escalated_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-    }.bind(this))()
+          this.updateState('total', this.nFormatter(dynamic_data.escalated_events[dynamic_data.escalated_events.length - 1]), this.state.escalated_events)
+          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
+          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
+
+          $(ReactDOM.findDOMNode(this.refs.threats)).sparkline(dynamic_data.threats, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+          $(ReactDOM.findDOMNode(this.refs.disrupted_connections)).sparkline(dynamic_data.disrupted_connections, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+          $(ReactDOM.findDOMNode(this.refs.auto_notifications)).sparkline(dynamic_data.auto_notifications, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+          $(ReactDOM.findDOMNode(this.refs.messages)).sparkline(dynamic_data.messages, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+          $(ReactDOM.findDOMNode(this.refs.escalated_events)).sparkline(dynamic_data.escalated_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+        }
+      })
+      .catch( error => console.log(error) )
   }
   render() {
     return (
