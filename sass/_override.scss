@@ -1,6 +1,14 @@
 /** h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 } */
+
+html.default body #navbar ~ #body {
+  padding-top: 0;
+  @media (min-width: $screen-laptop-lg-min) {
+    padding-top: $grid-padding;
+  }
+}
+
 hr {
   margin-top: 5px;
   margin-bottom: 5px;

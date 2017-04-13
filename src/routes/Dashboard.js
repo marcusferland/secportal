@@ -62,7 +62,7 @@ class FunnelChart extends React.Component {
     Highcharts.chart('funnel', {
       chart: {
         type: 'funnel',
-        marginRight: 100
+        marginRight: 50
       },
       title: {
         text: null
@@ -77,7 +77,6 @@ class FunnelChart extends React.Component {
           },
           neckWidth: '30%',
           neckHeight: '25%'
-
           //-- Other available options
           // height: pixels or percent
           // width: pixels or percent
@@ -154,14 +153,13 @@ class FunnelChart extends React.Component {
   }
   render() {
     return (
-      <PanelBody style={{paddingTop: 10}}>
-        <div id='funnel' style={{
-          maxWidth: '600px',
-          height: '100%',
-          margin: '0 0 0 -25px',
-          paddingBottom: '10px'
-        }}></div>
-      </PanelBody>
+      <div id='funnel' style={{
+        border: 0,
+        maxWidth: '98%',
+        height: 'auto',
+        margin: '0px',
+        paddingBottom: '20px'
+      }}></div>
     );
   }
 }
@@ -190,13 +188,14 @@ export default class Dashboard extends React.Component {
         low: '',
         high: ''
       },
-      escalated_events: {
+      targeted_assets: {
         total: '',
         low: '',
         high: ''
       }
     }
   }
+
   nFormatter(num = 0) {
     if (num >= 1000000000)
       return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G'
@@ -226,52 +225,48 @@ export default class Dashboard extends React.Component {
     })
   }
 
+  getThreats() {
+    return axios.get('http://localhost:3002/api/v1/threats/total')
+  }
+  getDisruptedConnections() {
+    return axios.get('http://localhost:3002/api/v1/disrupted_connections/total')
+  }
+  getAutoNotifications() {
+    return axios.get('http://localhost:3002/api/v1/auto_notifications/total')
+  }
+  getMessages() {
+    return axios.get('http://localhost:3002/api/v1/messages/total')
+  }
+  getTargetedAssets() {
+    return axios.get('http://localhost:3002/api/v1/targeted_assets/total')
+  }
+
   componentDidMount() {
-    let threats = {}
+    const list = ['threats', 'disrupted_connections', 'auto_notifications', 'messages', 'targeted_assets']
     axios
-      .get('http://localhost:3002/api/v1/threats/total')
+      .all([
+        this.getThreats(),
+        this.getDisruptedConnections(),
+        this.getAutoNotifications(),
+        this.getMessages(),
+        this.getTargetedAssets(),
+      ])
       .then(response => {
-        if (response.status == 200) {
-          threats = {
-            count: response.data.count
+
+        let newObjState = {}
+        for (var i = 0; i < response.length; i++) {
+          newObjState[list[i]] = {
+            total: this.nFormatter(response[i].data.count[response[i].data.count.length - 1]),
+            low: this.nFormatter( Math.min.apply(Math, response[i].data.count) ),
+            high: this.nFormatter( Math.max.apply(Math, response[i].data.count) )
           }
-
-          const dynamic_data = {
-            threats: this.randomFloatBetween(100000, 200000),
-            disrupted_connections: this.randomFloatBetween(100000, 200000),
-            auto_notifications: this.randomFloatBetween(1000, 10000),
-            messages: this.randomFloatBetween(500, 1000),
-            escalated_events: this.randomFloatBetween(0, 100),
-          }
-
-          this.updateState('total', this.nFormatter(dynamic_data.threats[dynamic_data.threats.length - 1]), this.state.threats)
-          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.threats) ), this.state.threats)
-          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.threats) ), this.state.threats)
-
-          this.updateState('total', this.nFormatter(dynamic_data.disrupted_connections[dynamic_data.disrupted_connections.length - 1]), this.state.disrupted_connections)
-          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
-          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.disrupted_connections) ), this.state.disrupted_connections)
-
-          this.updateState('total', this.nFormatter(dynamic_data.auto_notifications[dynamic_data.auto_notifications.length - 1]), this.state.auto_notifications)
-          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
-          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.auto_notifications) ), this.state.auto_notifications)
-
-          this.updateState('total', this.nFormatter(dynamic_data.messages[dynamic_data.messages.length - 1]), this.state.messages)
-          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.messages) ), this.state.messages)
-          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.messages) ), this.state.messages)
-
-          this.updateState('total', this.nFormatter(dynamic_data.escalated_events[dynamic_data.escalated_events.length - 1]), this.state.escalated_events)
-          this.updateState('low',   this.nFormatter( Math.min.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
-          this.updateState('high',  this.nFormatter( Math.max.apply(Math, dynamic_data.escalated_events) ), this.state.escalated_events)
-
-          $(ReactDOM.findDOMNode(this.refs.threats)).sparkline(dynamic_data.threats, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-          $(ReactDOM.findDOMNode(this.refs.disrupted_connections)).sparkline(dynamic_data.disrupted_connections, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-          $(ReactDOM.findDOMNode(this.refs.auto_notifications)).sparkline(dynamic_data.auto_notifications, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-          $(ReactDOM.findDOMNode(this.refs.messages)).sparkline(dynamic_data.messages, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
-          $(ReactDOM.findDOMNode(this.refs.escalated_events)).sparkline(dynamic_data.escalated_events, {composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''})
+          $(ReactDOM.findDOMNode(this.refs[list[i]])).sparkline(response[i].data.count, {
+            composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''
+          })
         }
+        this.setState(newObjState)
       })
-      .catch( error => console.log(error) )
+      .catch(err => console.log(err))
   }
   render() {
     return (
@@ -367,12 +362,12 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.escalated_events.total}</div>
-                    <div style={{marginBottom: '25px'}}>Escalated Events</div>
-                    <div ref='escalated_events'></div>
+                    }}>{this.state.targeted_assets.total}</div>
+                    <div style={{marginBottom: '25px'}}>Targeted Assets</div>
+                    <div ref='targeted_assets'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.escalated_events.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.escalated_events.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.targeted_assets.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.targeted_assets.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
@@ -381,15 +376,11 @@ export default class Dashboard extends React.Component {
           </div>
         </Row>
         <Row>
-          <Col sm={5} collapseRight>
+          <Col sm={12} className='funnel-chart'>
             <PanelContainer>
               <Panel>
-                <PanelBody style={{padding: 0}}>
-                  <Grid>
-                    <Row>
-                      <FunnelChart />
-                    </Row>
-                  </Grid>
+                <PanelBody>
+                  <FunnelChart />
                 </PanelBody>
               </Panel>
             </PanelContainer>
