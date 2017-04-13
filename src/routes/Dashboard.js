@@ -168,13 +168,13 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const list = ['threats', 'disrupted_connections', 'auto_notifications', 'messages', 'targeted_assets']
+    const list = ['messages', 'auto_notifications', 'threats', 'disrupted_connections', 'targeted_assets']
     axios
       .all([
+        this.getMessages(),
+        this.getAutoNotifications(),
         this.getThreats(),
         this.getDisruptedConnections(),
-        this.getAutoNotifications(),
-        this.getMessages(),
         this.getTargetedAssets(),
       ])
       .then(response => {
@@ -208,32 +208,12 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.threats.total}</div>
-                    <div style={{marginBottom: '25px'}}>Threats</div>
-                    <div ref='threats'></div>
+                    }}>{this.state.messages.total}</div>
+                    <div style={{marginBottom: '25px'}}>Total Messages</div>
+                    <div ref='messages'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.threats.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.threats.high}</b></div>
-                    </div>
-                  </PanelBody>
-                </Panel>
-              </PanelContainer>
-            </Col>
-            <Col className='col-sm-2_5 text-center'>
-              <PanelContainer>
-                <Panel>
-                  <PanelBody style={{padding: '25px'}}>
-                    <div style={{
-                      color: 'black',
-                      display: 'block',
-                      fontSize: '50px',
-                      fontWeight: 100
-                    }}>{this.state.disrupted_connections.total}</div>
-                    <div style={{marginBottom: '25px'}}>Disrupted Connections</div>
-                    <div ref='disrupted_connections'></div>
-                    <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.disrupted_connections.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.disrupted_connections.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.messages.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.messages.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
@@ -268,12 +248,32 @@ export default class Dashboard extends React.Component {
                       display: 'block',
                       fontSize: '50px',
                       fontWeight: 100
-                    }}>{this.state.messages.total}</div>
-                    <div style={{marginBottom: '25px'}}>Messages</div>
-                    <div ref='messages'></div>
+                    }}>{this.state.threats.total}</div>
+                    <div style={{marginBottom: '25px'}}>Threats Alerts</div>
+                    <div ref='threats'></div>
                     <div style={{paddingTop: '25px'}}>
-                      <div className='text-left pull-left'>Low <b>{this.state.messages.low}</b></div>
-                      <div className='text-right pull-right'>High <b>{this.state.messages.high}</b></div>
+                      <div className='text-left pull-left'>Low <b>{this.state.threats.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.threats.high}</b></div>
+                    </div>
+                  </PanelBody>
+                </Panel>
+              </PanelContainer>
+            </Col>
+            <Col className='col-sm-2_5 text-center'>
+              <PanelContainer>
+                <Panel>
+                  <PanelBody style={{padding: '25px'}}>
+                    <div style={{
+                      color: 'black',
+                      display: 'block',
+                      fontSize: '50px',
+                      fontWeight: 100
+                    }}>{this.state.disrupted_connections.total}</div>
+                    <div style={{marginBottom: '25px'}}>Disrupted Connections</div>
+                    <div ref='disrupted_connections'></div>
+                    <div style={{paddingTop: '25px'}}>
+                      <div className='text-left pull-left'>Low <b>{this.state.disrupted_connections.low}</b></div>
+                      <div className='text-right pull-right'>High <b>{this.state.disrupted_connections.high}</b></div>
                     </div>
                   </PanelBody>
                 </Panel>
