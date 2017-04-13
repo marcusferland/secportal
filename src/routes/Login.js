@@ -7,6 +7,7 @@ import querystring from 'querystring'
 
 import Auth from '../common/auth'
 import Config from '../common/config'
+import { formatDate } from '../common/utils'
 import Totp from '../routes/Totp'
 
 import {
@@ -45,22 +46,39 @@ class Login extends React.Component {
 
     this.processForm = this.processForm.bind(this)
     this.changeUser = this.changeUser.bind(this)
+
+    this.systemMessage = true
+    this.date = new Date()
   }
 
   componentDidMount() {
-    $('html').addClass('authentication');
+    $('html').addClass('authentication')
+
+
+    if (this.systemMessage) {
+      Messenger.options = {
+        theme: 'flat'
+      }
+      Messenger().post({
+        hideAfter: 3600,
+        id: 'info',
+        type: 'info',
+        singleton: true,
+        message: `<h4 style='margin-top:5px'><b>System Messages</b></h4><b>${formatDate(this.date)}</b>: Planned system maintenance. Work will commence shortly and should resolve in ~2-3 hours.`,
+        showCloseButton: true
+      })
+    }
   }
 
   componentWillUnmount() {
-    $('html').removeClass('authentication');
+    $('html').removeClass('authentication')
   }
 
   processForm(e) {
     e.preventDefault()
 
-    const email = this.state.user.email;
-    const password = this.state.user.password;
-    const date = new Date()
+    const email = this.state.user.email
+    const password = this.state.user.password
     const config = {
       headers: {
         'Content-type': 'application/x-www-form-urlencoded'
@@ -154,22 +172,6 @@ class Login extends React.Component {
                               </Grid>
                             </FormGroup>
                           </Form>
-                        </div>
-                        <div>
-                          <div className='text-center' style={{padding: 12.5}}>
-                            &mdash; or use your social account &mdash;
-                          </div>
-                        </div>
-                        <div className='bg-hoverblue fg-black50 text-center' style={{padding: 12.5}}>
-                          <div style={{marginTop: 12.5, marginBottom: 12.5}}>
-                            <Button id='facebook-btn' lg bsStyle='darkblue' type='submit' onClick={::this.back}>
-                              <Icon glyph='icon-fontello-facebook' />
-                              <span>Sign in <span className='hidden-xs'>with facebook</span></span>
-                            </Button>
-                          </div>
-                          <div>
-                            <a id='twitter-link' href='#' onClick={::this.back}><Icon glyph='icon-fontello-twitter' /><span> or with twitter</span></a>
-                          </div>
                         </div>
                       </PanelBody>
                     </Panel>

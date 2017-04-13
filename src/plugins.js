@@ -15,5 +15,6 @@ import "bower_components/jquery-ui/jquery-ui.min.js";
 import 'bower_components/vex/js/vex.combined.min.js';
 import "bower_components/jquery-validation/dist/jquery.validate.min.js";
 import 'bower_components/kapusta-jquery.sparkline/dist/jquery.sparkline.js';
+import "bower_components/messenger/build/js/messenger.min.js";
 
 import 'js/rubix.js';

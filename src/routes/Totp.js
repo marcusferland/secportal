@@ -70,7 +70,7 @@ export default class Totp extends React.Component {
   }
 
   alert(msg = null) {
-    vex.dialog.alert(msg);
+    vex.dialog.alert(msg)
   }
 
   processForm(e) {

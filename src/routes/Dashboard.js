@@ -16,40 +16,7 @@ import {
   PanelContainer,
 } from '@sketchpixy/rubix'
 
-class Contact extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      invited: this.props.invited ? true : false,
-      invitedText: this.props.invited ? 'invited' : 'invite'
-    };
-  }
-  handleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      invited: !this.state.invited,
-      invitedText: (!this.state.invited) ? 'invited': 'invite'
-    });
-  }
-  render() {
-    return (
-      <tr>
-        <td style={{verticalAlign: 'middle', borderTop: this.props.noBorder ? 'none': null}}>
-          <img src={`/imgs/app/avatars/${this.props.avatar}.png`} />
-        </td>
-        <td style={{verticalAlign: 'middle', borderTop: this.props.noBorder ? 'none': null}}>
-          {this.props.name}
-        </td>
-        <td style={{verticalAlign: 'middle', borderTop: this.props.noBorder ? 'none': null}} className='text-right'>
-          <Button onlyOnHover bsStyle='orange' active={this.state.invited} onClick={::this.handleClick}>
-            {this.state.invitedText}
-          </Button>
-        </td>
-      </tr>
-    );
-  }
-}
+import { nFormatter } from '../common/utils'
 
 class FunnelChart extends React.Component {
   componentDidMount() {
@@ -129,28 +96,8 @@ class FunnelChart extends React.Component {
         }]
       }
     })
-    /** const data = [
-      ['Raw Events', 129653],
-      ['Filtered Events', 99864],
-      ['Sent Alerts', 15234],
-      ['Escalated Events', 50],
-    ];
-    const options = {
-      block: {
-        dynamicHeight: false
-      },
-      chart:{
-        height: '95%',
-        width: '100%',
-        bottomPinch: 1
-      },
-      label: {
-        format: "{l}:\n{f}"
-      }
-    }
-    const chart = new D3Funnel('#funnel')
-    chart.draw(data, options) */
   }
+
   render() {
     return (
       <div id='funnel' style={{
@@ -196,27 +143,6 @@ export default class Dashboard extends React.Component {
     }
   }
 
-  nFormatter(num = 0) {
-    if (num >= 1000000000)
-      return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G'
-
-    if (num >= 1000000)
-      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
-
-    if (num >= 1000)
-      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
-
-    return num
-  }
-
-  randomFloatBetween(minValue, maxValue, precision = 2, num = 30) {
-    const arr = []
-    for (let i = 0; i <= num; i++) {
-      arr.push( parseInt( Math.min(minValue + (Math.random() * (maxValue - minValue)), maxValue).toFixed(precision) ) )
-    }
-    return arr
-  }
-
   updateState(key, value, stateObj) {
     stateObj[key] = value
 
@@ -256,9 +182,9 @@ export default class Dashboard extends React.Component {
         let newObjState = {}
         for (var i = 0; i < response.length; i++) {
           newObjState[list[i]] = {
-            total: this.nFormatter(response[i].data.count[response[i].data.count.length - 1]),
-            low: this.nFormatter( Math.min.apply(Math, response[i].data.count) ),
-            high: this.nFormatter( Math.max.apply(Math, response[i].data.count) )
+            total: nFormatter(response[i].data.count[response[i].data.count.length - 1]),
+            low: nFormatter( Math.min.apply(Math, response[i].data.count) ),
+            high: nFormatter( Math.max.apply(Math, response[i].data.count) )
           }
           $(ReactDOM.findDOMNode(this.refs[list[i]])).sparkline(response[i].data.count, {
             composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''
