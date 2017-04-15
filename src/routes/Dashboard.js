@@ -111,10 +111,29 @@ class FunnelChart extends React.Component {
   }
 }
 
+class Chart extends React.Component {
+  render() {
+    return (
+      <PanelContainer>
+        <Panel>
+          <PanelBody style={{padding: 25}}>
+            <div id={this.props.id}></div>
+          </PanelBody>
+        </Panel>
+      </PanelContainer>
+    )
+  }
+}
+
+var interval = null
+
 export default class Dashboard extends React.Component {
   constructor(props, context) {
-    super()
+    super(props)
     this.state = {
+      users: [],
+      error: null,
+      count: '',
       threats: {
         total: '',
         low: '',
@@ -143,6 +162,11 @@ export default class Dashboard extends React.Component {
     }
   }
 
+  handleData(data) {
+    console.log(data)
+    this.setState({count: data})
+  }
+
   updateState(key, value, stateObj) {
     stateObj[key] = value
 
@@ -167,7 +191,34 @@ export default class Dashboard extends React.Component {
     return axios.get('http://localhost:3002/api/v1/targeted_assets/total')
   }
 
+  initWebSocket() {
+    let newObjState = {}
+    this.ws = new WebSocket('ws://localhost:3003')
+    this.ws.onmessage = e => {
+      let data = JSON.parse(e.data)
+      newObjState['threats'] = {
+        total: nFormatter(data.count[data.count.length - 1]),
+        low:   nFormatter( Math.min.apply(Math, data.count) ),
+        high:  nFormatter( Math.max.apply(Math, data.count) )
+      }
+      $(ReactDOM.findDOMNode(this.refs.threats)).sparkline(data.count, {
+        composite: false, height: '2em', width: '100%', fillColor: false, lineColor: '#7CD5BA', tooltipPrefix: ''
+      })
+      this.setState(newObjState)
+    }
+    this.ws.onerror = e => this.setState({ error: 'WebSocket error' })
+    this.ws.onclose = e => {
+      setTimeout(() => {
+        this.initWebSocket()
+      }, 1000
+      !e.wasClean && this.setState({ error: `WebSocket error: ${e.code} ${e.reason}` })
+    }
+  }
+
   componentDidMount() {
+
+    ::this.initWebSocket()
+
     const list = ['messages', 'auto_notifications', 'threats', 'disrupted_connections', 'targeted_assets']
     axios
       .all([
@@ -193,10 +244,70 @@ export default class Dashboard extends React.Component {
         this.setState(newObjState)
       })
       .catch(err => console.log(err))
+
+    var chart = new Rubix('#realtime-stacked-chart', {
+      width: '100%',
+      height: 200,
+      title: 'Realtime Streamgraph (Silhouette + Monotone Interpolation)',
+      subtitle: 'Interval-based, immediate shift',
+      tooltip: {
+        color: 'cornflowerblue',
+        format: {
+          x: '.0f',
+          y: '.0f'
+        }
+      },
+      stacked: true,
+      offset: 'silhouette',
+      interpolate: 'monotone'
+    })
+
+    var area = chart.area_series({
+      name: 'Series A',
+      color: '#0054A9'
+    })
+
+    var t = 0,
+        v = 10,
+        data = d3.range(100).map(realtime_stacked_intvl)
+
+    function realtime_stacked_intvl() {
+      return {
+        x: ++t,
+        y: v = ~~Math.max(10, Math.min(90, v + 10 * (Math.random() - .5)))
+      }
+    }
+
+    area.addData(data)
+
+    var area2 = chart.area_series({
+      name: 'Series B',
+      color: 'cornflowerblue',
+      marker: 'square'
+    })
+
+    var t = 0,
+        v = 44,
+        data2 = d3.range(100).map(realtime_stacked_intvl)
+
+    area2.addData(data2)
+
+    interval = setInterval(() => {
+      area.addPoint(realtime_stacked_intvl(), true)
+      --t;
+      area2.addPoint(realtime_stacked_intvl(), true)
+    }, 2500)
   }
+
+  componentWillUnmount() {
+    this.ws.close()
+    clearInterval(interval)
+  }
+
   render() {
     return (
       <div className='dashboard'>
+        <div>{this.state.users}</div>
         <Row style={{lineHeight: 1}}>
           <div className='dashboard-widgets'>
             <Col className='col-sm-2_5 text-center'>
@@ -300,6 +411,11 @@ export default class Dashboard extends React.Component {
               </PanelContainer>
             </Col>
           </div>
+        </Row>
+        <Row>
+          <Col sm={12}>
+            <Chart id='realtime-stacked-chart' />
+          </Col>
         </Row>
         <Row>
           <Col sm={12} className='funnel-chart'>
