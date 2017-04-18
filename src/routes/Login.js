@@ -81,10 +81,12 @@ class Login extends React.Component {
     const password = this.state.user.password
     const config = {
       headers: {
+        'Authorization': 'Basic dGVzdGNsaWVudDo=',
         'Content-type': 'application/x-www-form-urlencoded'
       }
     }
 
+    /**
     axios
       .post('http://localhost:3001/auth/login', querystring.stringify({
         email: email,
@@ -98,6 +100,23 @@ class Login extends React.Component {
           }
         }
         else {}
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    */
+    axios
+      .post('http://localhost:3004/oauth/token', querystring.stringify({
+        username: email,
+        password: password,
+        grant_type: 'password',
+        client_id: 'testclient',
+        'client_secret': 'secret'
+      }), config)
+      .then(response => {
+        console.log(response)
+        cookie.save('authed', response.data.access_token, Config.cookies.config)
+        this.props.router.push(::this.getPath('totp'))
       })
       .catch(error => {
         console.log(error)
