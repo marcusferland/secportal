@@ -1,6 +1,10 @@
 import React from 'react'
 import classNames from 'classnames'
 import { IndexRoute, Route } from 'react-router'
+import axios from 'axios'
+import cookie from 'react-cookie'
+import querystring from 'querystring'
+import Config from './common/config'
 
 import { Grid, Row, Col, MainContainer } from '@sketchpixy/rubix'
 
@@ -61,6 +65,33 @@ function isAuthed(nextState, replace) {
     replace({
       pathname: '/ltr/dashboard'
     })
+  }
+  else {
+    const refreshTokenConfig = {
+      headers: {
+        'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
+        'Content-type': 'application/x-www-form-urlencoded'
+      }
+    }
+    let token = null
+
+    axios
+      .post('http://localhost:3004/oauth/token', querystring.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: 'a17c57159b4b51ba5d1b0947a3800aa6edcc2019'
+      }), refreshTokenConfig)
+      .then(response => {
+        if (response.data) {
+          token = response.data.access_token
+
+          cookie.save('token', token, Config.cookies.config)
+          cookie.remove('authed', '/')
+          return token
+        }
+      })
+      .catch(err => {
+        return err
+      })
   }
 }
 

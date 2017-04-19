@@ -149,28 +149,49 @@ export default class Totp extends React.Component {
         user: tokenPayload.user
       }
 
-      const token = jwt.sign(
+      /**const token = jwt.sign(
         payload,
         Config.jwt.secret, {
           expiresIn: Config.jwt.expiry
         }
-      )
+      )*/
 
-      if (token) {
-        cookie.save('token', token, Config.cookies.config)
-        cookie.remove('authed', '/')
+      // get new access token
+      const refreshTokenConfig = {
+        headers: {
+          'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
+          'Content-type': 'application/x-www-form-urlencoded'
+        }
+      }
+      let token = null
 
-        // good; send to dashboard
-        this.props.router.push(::this.getPath('dashboard'))
-        return
-      }
-      else {
-        ::this.alert('Not verified!')
-        return
-      }
+      axios
+        .post('http://localhost:3004/oauth/token', querystring.stringify({
+          grant_type: 'refresh_token',
+          refresh_token: 'a17c57159b4b51ba5d1b0947a3800aa6edcc2019'
+        }), refreshTokenConfig)
+        .then(response => {
+          if (response.data) {
+            token = response.data.access_token
+
+            cookie.save('token', token, Config.cookies.config)
+            cookie.remove('authed', '/')
+
+            // we good; send to dashboard
+            this.props.router.push(::this.getPath('dashboard'))
+          }
+          else {
+            ::this.alert('Not verified!')
+            return
+          }
+        })
+        .catch(error => {
+          ::this.alert(error)
+          return
+        })
     }
     else {
-      ::this.alert('Not verified!')
+      ::this.alert('Could not verify your code. Please try again.')
       return
     }
   }
