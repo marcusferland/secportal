@@ -52,6 +52,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+
     $('html').addClass('authentication')
 
 

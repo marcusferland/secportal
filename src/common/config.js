@@ -23,5 +23,6 @@ module.exports = {
       path: '/',
       secure: false
     }
-  }
+  },
+  mongoUrl: 'mongodb://localhost/test'
 }

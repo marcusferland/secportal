@@ -2,12 +2,13 @@ import React from 'react'
 import jwt from 'jsonwebtoken'
 import Cookie from 'react-cookie'
 import speakeasy from 'speakeasy'
-
-import Config from './config'
+import config from './config'
 
 class Auth extends React.Component {
 
-  componentDidMount() {
+  constructor(props, context) {
+    super(props)
+
     this.state = {
       user: {
         email: '',
@@ -123,7 +124,7 @@ class Auth extends React.Component {
 
     if (token) {
       try {
-        verified = jwt.verify(token, Config.jwt.secret)
+        verified = jwt.verify(token, config.jwt.secret)
         return verified
       } catch (err) {
         return false

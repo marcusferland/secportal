@@ -9,8 +9,13 @@ import bodyParser from 'body-parser'
 import cookie from 'react-cookie'
 import bearerToken from 'express-bearer-token'
 
+import config from './src/common/config'
+
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
+
+import mongoose from 'mongoose'
+import RefreshToken from './refreshTokenModel'
 
 import routes from './src/routes'
 import { renderHTMLString } from '@sketchpixy/rubix/lib/node/router'
@@ -18,6 +23,10 @@ import RubixAssetMiddleware from '@sketchpixy/rubix/lib/node/RubixAssetMiddlewar
 
 const port = process.env.PORT || 8080
 const app = express()
+
+mongoose.connect(config.mongoUrl, function(err, result) {
+  if (err) return res.status(500).send(`ERROR connecting to: ${config.mongoUrl}; ${err}`).end()
+})
 
 app.use(compression({
   level: 9,
@@ -51,6 +60,14 @@ function renderHTML(req, res) {
     }
   })
 }
+
+app.get('/token/refresh', (req, res, next) => {
+
+  RefreshToken.findOne({}, function(err, token) {
+    if (err) return res.status(500).send(err).end()
+    else return res.status(200).json(token).end()
+  })
+})
 
 /** BEGIN X-EDITABLE ROUTES */
 
