@@ -168,7 +168,7 @@ export default class Totp extends React.Component {
       axios
         .post('http://localhost:3004/oauth/token', querystring.stringify({
           grant_type: 'refresh_token',
-          refresh_token: 'a17c57159b4b51ba5d1b0947a3800aa6edcc2019'
+          refresh_token: '3263949a2ff74256e8eac02fb901e98b05f2752a'
         }), refreshTokenConfig)
         .then(response => {
           if (response.data) {

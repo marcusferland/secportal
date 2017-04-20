@@ -62,7 +62,6 @@ function renderHTML(req, res) {
 }
 
 app.get('/token/refresh', (req, res, next) => {
-
   RefreshToken.findOne({}, function(err, token) {
     if (err) return res.status(500).send(err).end()
     else return res.status(200).json(token).end()

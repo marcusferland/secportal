@@ -112,7 +112,7 @@ class Login extends React.Component {
         password: password,
         grant_type: 'password',
         client_id: 'testclient',
-        'client_secret': 'secret'
+        client_secret: 'secret'
       }), config)
       .then(response => {
         console.log(response)
