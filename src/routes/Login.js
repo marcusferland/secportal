@@ -16,6 +16,7 @@ import {
   Icon,
   Grid,
   Form,
+  Image,
   Panel,
   Button,
   PanelBody,
@@ -39,8 +40,9 @@ class Login extends React.Component {
     this.state = {
       errors: {},
       user: {
-        email: '',
-        password: ''
+        email: 'marcus.ferland@gmail.com',
+        password: 'Mferly1633',
+        totp: '123456'
       }
     }
 
@@ -80,19 +82,19 @@ class Login extends React.Component {
 
     const email = this.state.user.email
     const password = this.state.user.password
+    const totp = this.state.user.totp
     const config = {
       headers: {
-        'Authorization': 'Basic dGVzdGNsaWVudDo=',
         'Content-type': 'application/x-www-form-urlencoded'
       }
     }
 
-    /**
     axios
-      .post('http://localhost:3001/auth/login', querystring.stringify({
+      .post('http://localhost:3001/login', querystring.stringify({
         email: email,
-        password: password
-      }), config)
+        password: password,
+        code: totp
+      }))
       .then(response => {
         if (response.data.success == true) {
           if (response.data.token) {
@@ -105,8 +107,7 @@ class Login extends React.Component {
       .catch(error => {
         console.log(error)
       })
-    */
-    axios
+    /**axios
       .post('http://localhost:3004/oauth/token', querystring.stringify({
         username: email,
         password: password,
@@ -121,7 +122,7 @@ class Login extends React.Component {
       })
       .catch(error => {
         console.log(error)
-      })
+      })*/
   }
 
   /**
@@ -162,7 +163,7 @@ class Login extends React.Component {
                           </h3>
                         </div>
                         <div style={{padding: 25, paddingTop: 0, paddingBottom: 0, margin: 'auto', marginBottom: 25, marginTop: 25}}>
-                          <Form onSubmit={this.processForm} method='post'>
+                          <Form onSubmit={::this.processForm} method='post'>
                             <FormGroup controlId='emailaddress'>
                               <InputGroup bsSize='large'>
                                 <InputGroup.Addon>
@@ -177,6 +178,14 @@ class Login extends React.Component {
                                   <Icon glyph='icon-fontello-key' />
                                 </InputGroup.Addon>
                                 <FormControl value={this.state.user.password} name='password' onChange={this.changeUser} type='password' className='border-focus-blue' placeholder='password' />
+                              </InputGroup>
+                            </FormGroup>
+                            <FormGroup controlId='totp'>
+                              <InputGroup bsSize='large'>
+                                <InputGroup.Addon>
+                                  <Icon glyph='icon-fontello-qrcode' />
+                                </InputGroup.Addon>
+                                <FormControl value={this.state.user.totp} name='totp' onChange={this.changeUser} type='text' className='border-focus-blue' placeholder='Two-Factor Auth Code' />
                               </InputGroup>
                             </FormGroup>
                             <FormGroup>

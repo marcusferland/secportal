@@ -5,22 +5,15 @@ import Cookie from 'react-cookie'
 import { Link, withRouter } from 'react-router'
 
 import {
-  Label,
-  SidebarBtn,
-  Dispatcher,
-  NavDropdown,
-  NavDropdownHover,
-  Navbar,
   Nav,
-  NavItem,
-  MenuItem,
-  Badge,
-  Button,
+  Row,
+  Col,
   Icon,
   Grid,
-  Row,
-  Radio,
-  Col } from '@sketchpixy/rubix'
+  Navbar,
+  NavItem,
+  SidebarBtn
+} from '@sketchpixy/rubix'
 
 import Auth from './auth'
 
@@ -49,7 +42,7 @@ class HeaderNavigation extends React.Component {
 
   handleLogout(e) {
     Auth.deauthenticateUser()
-    this.props.router.push('/');
+    this.props.router.push(::this.getPath('login'));
   }
 
   getPath(path) {

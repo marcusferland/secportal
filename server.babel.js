@@ -21,6 +21,8 @@ import routes from './src/routes'
 import { renderHTMLString } from '@sketchpixy/rubix/lib/node/router'
 import RubixAssetMiddleware from '@sketchpixy/rubix/lib/node/RubixAssetMiddleware'
 
+const twoFactor = require('passport-2fa-totp')
+
 const port = process.env.PORT || 8080
 const app = express()
 
@@ -118,6 +120,11 @@ app.get('/rtl/*', RubixAssetMiddleware('rtl'), (req, res, next) => {
   renderHTML(req, res)
 })
 
+app.get('/2fa', (req, res, next) => {
+  const newSecret = twoFactor.generateSecret({name: 'My Awesome App', account: 'johndoe'})
+  res.send(newSecret).end()
+})
+
 app.listen(port, () => {
-  console.log(`Node.js app is running at http://localhost:${port}/`);
+  console.log(`Node.js app is running at http://localhost:${port}/`)
 })

@@ -47,20 +47,22 @@ export default class Totp extends React.Component {
   }
 
   componentDidMount() {
-    axios({
-      method: 'get',
-      url: 'http://localhost:3000/jwt',
-      headers: {
-        'Authorization': `Bearer ${Auth.getToken('authed')}`
-      }
-    })
-    .then(res => {
-      this.setState({
-        qrcode: res.data.url,
-        token: res.data.token
+    (() => {
+      axios({
+        method: 'get',
+        url: 'http://localhost:3000/jwt',
+        headers: {
+          'Authorization': `Bearer ${Auth.getToken('authed')}`
+        }
       })
-    })
-    .catch(err => {})
+      .then(res => {
+        this.setState({
+          qrcode: res.data.url,
+          token: res.data.token
+        })
+      })
+      .catch(err => {})
+    })();
   }
 
   back(e) {
@@ -168,7 +170,7 @@ export default class Totp extends React.Component {
       axios
         .post('http://localhost:3004/oauth/token', querystring.stringify({
           grant_type: 'refresh_token',
-          refresh_token: '3263949a2ff74256e8eac02fb901e98b05f2752a'
+          refresh_token: '05ec77fc7a6783437f435f3154801068a49c5a8a'
         }), refreshTokenConfig)
         .then(response => {
           if (response.data) {
