@@ -19,6 +19,10 @@ class Auth extends React.Component {
     }
   }
 
+  static getUserRefreshToken() {
+    return 'marcusferlando'
+  }
+
   /**
    * @return {string}
    */

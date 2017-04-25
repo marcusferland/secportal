@@ -52,28 +52,19 @@ function requireAuth(nextState, replace) {
     let token = null
 
     axios
-      .get(`http://localhost:${Config.port}/token/refresh`)
-      .then(refreshToken => {
-        axios
-          .post('http://localhost:3004/oauth/token', querystring.stringify({
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken.data.refreshToken
-          }), refreshTokenConfig)
-          .then(response => {
-            if (response.data) {
-              token = response.data.access_token
+      .post('http://localhost:3001/token', querystring.stringify({
+        grant_type: 'refresh_token',
+        token: Auth.getUserRefreshToken()
+      }), refreshTokenConfig)
+      .then(response => {
+        token = response.data.access_token
 
-              cookie.save('token', token, Config.cookies.config)
-              cookie.remove('authed', '/')
+        cookie.save('token', token, Config.cookies.config)
+        cookie.remove('authed', '/')
 
-              replace({
-                pathname: '/ltr/dashboard'
-              })
-            }
-          })
-          .catch(err => {
-            return err
-          })
+        replace({
+          pathname: '/ltr/dashboard'
+        })
       })
       .catch(err => {
         return err

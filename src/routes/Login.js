@@ -98,8 +98,8 @@ class Login extends React.Component {
       .then(response => {
         if (response.data.success == true) {
           if (response.data.token) {
-            cookie.save('authed', response.data.token, Config.cookies.config)
-            this.props.router.push(::this.getPath('totp'))
+            cookie.save('token', response.data.token, Config.cookies.config)
+            this.props.router.push(::this.getPath('dashboard'))
           }
         }
         else {}

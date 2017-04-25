@@ -24,5 +24,5 @@ module.exports = {
       secure: false
     }
   },
-  mongoUrl: 'mongodb://localhost/test'
+  mongoUrl: 'mongodb://localhost/secportal'
 }

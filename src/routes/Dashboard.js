@@ -306,6 +306,50 @@ export default class Dashboard extends React.Component {
             <PanelContainer>
               <Panel>
                 <PanelBody>
+                  <div className="column rendered-example elements-step-groups-step-example-groups">
+                    <div className="ui steps" style={{borderLeft:0,borderRight:0,borderRadius:0,margin:'25px 0',width:'100%'}}>
+                      <div className="step text-center" style={{width:'20%'}}>
+                        <div className="content">
+                          <div className="title">Raw Events</div>
+                          <div className="description">{this.state.messages.total}</div>
+                        </div>
+                      </div>
+                      <div className="step text-center" style={{width:'20%'}}>
+                        <div className="content">
+                          <div className="title">Filtered Events</div>
+                          <div className="description">{this.state.disrupted_connections.total}</div>
+                        </div>
+                      </div>
+                      <div className="step text-center" style={{width:'20%'}}>
+                        <div className="content">
+                          <div className="title">Automatic Notifications</div>
+                          <div className="description">{this.state.auto_notifications.total}</div>
+                        </div>
+                      </div>
+                      <div className="step text-center" style={{width:'20%'}}>
+                        <div className="content">
+                          <div className="title">Sent Alerts</div>
+                          <div className="description">{this.state.threats.total}</div>
+                        </div>
+                      </div>
+                      <div className="step text-center" style={{width:'20%'}}>
+                        <div className="content">
+                          <div className="title">Escalated Events</div>
+                          <div className="description">{this.state.targeted_assets.total}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </PanelBody>
+              </Panel>
+            </PanelContainer>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12} className='funnel-chart'>
+            <PanelContainer>
+              <Panel>
+                <PanelBody>
                   <FunnelChart />
                 </PanelBody>
               </Panel>

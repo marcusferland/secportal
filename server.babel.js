@@ -25,6 +25,15 @@ const twoFactor = require('passport-2fa-totp')
 
 const port = process.env.PORT || 8080
 const app = express()
+const db = require('./db')
+const ObjectID = require('mongodb').ObjectID
+
+db.connect(config.mongoUrl, function(err, result) {
+  if (err !== null) {
+    console.log('Cannot connect to MongoDB')
+    console.log(err)
+  }
+})
 
 mongoose.connect(config.mongoUrl, function(err, result) {
   if (err) return res.status(500).send(`ERROR connecting to: ${config.mongoUrl}; ${err}`).end()
@@ -39,6 +48,32 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(process.cwd(), 'public')))
 app.set('views', path.join(process.cwd(), 'views'))
 app.set('view engine', 'pug')
+
+app.post('/totp/codes', function(req, res, next) {
+  const users = db.get().collection('users')
+  users.findOne({ email: req.body.email }, function(err, user) {
+    if (err) return res.json({
+      err: err
+    }).end()
+
+    if ( ! user) return res.json({
+      err: err
+    }).end()
+
+    return res.json({
+      totps: user.backup_totp
+    }).end()
+
+    /**users.update(user, { $set: { secret: req.session.qr } }, function (err) {
+      if (err) {
+        // req.flash('setup-2fa-error', err);
+        return res.redirect('/setup-2fa')
+      }
+
+      res.redirect('/profile')
+    })*/
+  })
+})
 
 function renderHTML(req, res) {
   /**

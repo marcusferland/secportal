@@ -38,8 +38,30 @@ export default class Security extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      totps: Auth.getUserBackupTotp()
+      totps: ''
     }
+  }
+
+  componentDidMount() {
+    this.getUserBackupTotp()
+  }
+
+  getUserBackupTotp() {
+    const config = {
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded'
+      }
+    }
+    axios
+      .post('http://localhost:8080/totp/codes', querystring.stringify({
+        email: Auth.getUserEmail()
+      }), config)
+      .then(response => {
+        this.setState({ totps: response.data.totps })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   /**
