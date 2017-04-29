@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import classNames from 'classnames'
+import axios from 'axios'
+import querystring from 'querystring'
 import Cookie from 'react-cookie'
 import { Link, withRouter } from 'react-router'
 
@@ -41,8 +43,25 @@ class Brand extends React.Component {
 class HeaderNavigation extends React.Component {
 
   handleLogout(e) {
-    Auth.deauthenticateUser()
-    this.props.router.push(::this.getPath('login'));
+    const backupTotpCodes = {
+      headers: {
+        'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
+        'Content-type': 'application/x-www-form-urlencoded'
+      }
+    }
+
+    axios
+      .post('http://localhost:8080/user/logout', querystring.stringify({
+        user_id: Auth.getUserId()
+      }), backupTotpCodes)
+      .then(response => {
+
+        Auth.deauthenticateUser()
+        this.props.router.push(::this.getPath('login'))
+      })
+      .catch(err => {
+        return err
+      })
   }
 
   getPath(path) {

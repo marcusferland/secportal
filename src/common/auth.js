@@ -20,7 +20,7 @@ class Auth extends React.Component {
   }
 
   static getUserRefreshToken() {
-    return 'marcusferlando'
+    return '91f9b38bdb9004dbdd2eaa8991b3416caa3b61d3'
   }
 
   /**
@@ -43,42 +43,56 @@ class Auth extends React.Component {
    * @return {int}
    */
   static getUserId(whichToken = 'token') {
-    const verified = this.verifyToken(whichToken)
-    return verified.user.id
+    if (this.getToken()) {
+      const verified = this.verifyToken(whichToken)
+      return verified.user.id
+    }
+    return false
   }
 
   /**
    * @return {string}
    */
   static getUserEmail(whichToken = 'token') {
-    const verified = this.verifyToken(whichToken)
-    return verified.user.email
+    if (this.getToken()) {
+      const verified = this.verifyToken(whichToken)
+      return verified.user.email
+    }
+    return false
   }
 
   /**
    * @return {string}
    */
   static getUserName(whichToken = 'token') {
-    const verified = this.verifyToken(whichToken)
-    return verified.user.name
+    if (this.getToken()) {
+      const verified = this.verifyToken(whichToken)
+      return verified.user.name
+    }
+    return false
   }
 
   /**
    * @return {string}
    */
   static getUserRole(whichToken = 'token') {
-    const verified = this.verifyToken(whichToken)
-    return verified.user.role
+    if (this.getToken()) {
+      const verified = this.verifyToken(whichToken)
+      return verified.user.role
+    }
+    return false
   }
 
   /**
    * @return {array}
    */
   static getUserBackupTotp(whichToken = 'token') {
-    const verified = this.verifyToken(whichToken)
+    if (this.getToken()) {
+      const verified = this.verifyToken(whichToken)
 
-    if (verified) return verified.user.backup_totp
-    else return false
+      if (verified) return verified.user.backup_totp
+    }
+    return false
   }
 
   /**

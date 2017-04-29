@@ -43,6 +43,12 @@ import Totp from './routes/Totp'
 
 function requireAuth(nextState, replace) {
   if ( ! Auth.isUserAuthenticated() ) {
+    if ( ! Auth.getUserRefreshToken() ) {
+      return replace({
+        pathname: '/ltr/login'
+      })
+    }
+
     const refreshTokenConfig = {
       headers: {
         'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
@@ -62,23 +68,20 @@ function requireAuth(nextState, replace) {
         cookie.save('token', token, Config.cookies.config)
         cookie.remove('authed', '/')
 
-        replace({
+        return replace({
           pathname: '/ltr/dashboard'
         })
       })
       .catch(err => {
-        return err
+        return replace({
+          pathname: '/ltr/login'
+        })
       })
   }
 }
 function requireAuthTotp(nextState, replace) {
-  if ( ! Auth.isUserAuthenticated('authed') ) {
-    replace({
-      pathname: '/ltr/login'
-    })
-  }
   if ( Auth.isUserAuthenticated('token') ) {
-    replace({
+    return replace({
       pathname: '/ltr/dashboard'
     })
   }
@@ -86,7 +89,7 @@ function requireAuthTotp(nextState, replace) {
 
 function isAuthed(nextState, replace) {
   if ( Auth.isUserAuthenticated('token') ) {
-    replace({
+    return replace({
       pathname: '/ltr/dashboard'
     })
   }

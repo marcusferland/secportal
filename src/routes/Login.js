@@ -96,13 +96,10 @@ class Login extends React.Component {
         code: totp
       }))
       .then(response => {
-        if (response.data.success == true) {
-          if (response.data.token) {
-            cookie.save('token', response.data.token, Config.cookies.config)
-            this.props.router.push(::this.getPath('dashboard'))
-          }
+        if (response.data && response.data.token) {
+          cookie.save('token', response.data.token, Config.cookies.config)
+          this.props.router.push(::this.getPath('dashboard'))
         }
-        else {}
       })
       .catch(error => {
         console.log(error)

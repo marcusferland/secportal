@@ -2,6 +2,16 @@
   margin-top: 0;
 } */
 
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+p:first-child {
+
+  margin-top: 25px;
+}
+
 html.default body #navbar ~ #body {
   padding-top: 0;
   @media (min-width: $screen-laptop-lg-min) {

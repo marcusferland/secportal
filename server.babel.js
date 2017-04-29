@@ -22,6 +22,7 @@ import { renderHTMLString } from '@sketchpixy/rubix/lib/node/router'
 import RubixAssetMiddleware from '@sketchpixy/rubix/lib/node/RubixAssetMiddleware'
 
 const twoFactor = require('passport-2fa-totp')
+const assert = require('assert')
 
 const port = process.env.PORT || 8080
 const app = express()
@@ -48,6 +49,24 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(process.cwd(), 'public')))
 app.set('views', path.join(process.cwd(), 'views'))
 app.set('view engine', 'pug')
+
+app.post('/user/logout', function(req, res, next) {
+  const deleteRefreshToken = function(db, cb) {
+    const refreshTokensCollection = db.get().collection('refreshTokens')
+    refreshTokensCollection.deleteOne({
+      userId : ObjectID(req.body.user_id)
+    }, (err, result) => {
+      assert.equal(err, null)
+      assert.equal(1, result.result.n)
+      cb(result)
+    })
+  }
+  deleteRefreshToken(db, function(response) {
+    return res.json({
+      message: response
+    }).end()
+  })
+})
 
 app.post('/totp/codes', function(req, res, next) {
   const users = db.get().collection('users')

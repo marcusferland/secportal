@@ -43,10 +43,6 @@ export default class Security extends React.Component {
   }
 
   componentDidMount() {
-    this.getUserBackupTotp()
-  }
-
-  getUserBackupTotp() {
     const config = {
       headers: {
         'Content-type': 'application/x-www-form-urlencoded'
