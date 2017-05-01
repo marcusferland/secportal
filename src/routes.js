@@ -63,10 +63,7 @@ function requireAuth(nextState, replace) {
         token: Auth.getUserRefreshToken()
       }), refreshTokenConfig)
       .then(response => {
-        token = response.data.access_token
-
-        cookie.save('token', token, Config.cookies.config)
-        cookie.remove('authed', '/')
+        cookie.save('token', response.data.access_token, Config.cookies.config)
 
         return replace({
           pathname: '/ltr/dashboard'

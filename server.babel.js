@@ -54,7 +54,7 @@ app.post('/user/logout', function(req, res, next) {
   const deleteRefreshToken = function(db, cb) {
     const refreshTokensCollection = db.get().collection('refreshTokens')
     refreshTokensCollection.deleteOne({
-      userId : ObjectID(req.body.user_id)
+      token : req.body.refreshToken
     }, (err, result) => {
       assert.equal(err, null)
       assert.equal(1, result.result.n)

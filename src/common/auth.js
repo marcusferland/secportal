@@ -2,6 +2,7 @@ import React from 'react'
 import jwt from 'jsonwebtoken'
 import Cookie from 'react-cookie'
 import speakeasy from 'speakeasy'
+import axios from 'axios'
 import config from './config'
 
 class Auth extends React.Component {
@@ -19,8 +20,22 @@ class Auth extends React.Component {
     }
   }
 
+  static setUserRefreshToken(key = 'refreshToken', value = null) {
+    const date = new Date()
+
+    date.setMinutes(date.getMinutes() + 15)
+    Cookie.save(key, value, {
+      domain: cookieObj.domain, // localhost
+      expires: date,
+      maxAge: cookieObj.maxAge, // 900
+      path: cookieObj.path, // '/'
+      secure: cookieObj.secure // true|false
+    })
+  }
+
   static getUserRefreshToken() {
-    return '91f9b38bdb9004dbdd2eaa8991b3416caa3b61d3'
+    return Cookie.load('refreshToken')
+    // return 'e0aaa92c71cecb9ed73fb35bf544029dc9651c29'
   }
 
   /**
@@ -56,7 +71,7 @@ class Auth extends React.Component {
   static getUserEmail(whichToken = 'token') {
     if (this.getToken()) {
       const verified = this.verifyToken(whichToken)
-      return verified.user.email
+      return verified ? verified.user.email : false
     }
     return false
   }
@@ -78,7 +93,7 @@ class Auth extends React.Component {
   static getUserRole(whichToken = 'token') {
     if (this.getToken()) {
       const verified = this.verifyToken(whichToken)
-      return verified.user.role
+      if (verified) return verified.user.role
     }
     return false
   }
@@ -89,7 +104,6 @@ class Auth extends React.Component {
   static getUserBackupTotp(whichToken = 'token') {
     if (this.getToken()) {
       const verified = this.verifyToken(whichToken)
-
       if (verified) return verified.user.backup_totp
     }
     return false

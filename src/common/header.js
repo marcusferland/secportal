@@ -43,7 +43,7 @@ class Brand extends React.Component {
 class HeaderNavigation extends React.Component {
 
   handleLogout(e) {
-    const backupTotpCodes = {
+    const headers = {
       headers: {
         'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
         'Content-type': 'application/x-www-form-urlencoded'
@@ -52,10 +52,9 @@ class HeaderNavigation extends React.Component {
 
     axios
       .post('http://localhost:8080/user/logout', querystring.stringify({
-        user_id: Auth.getUserId()
-      }), backupTotpCodes)
+        refreshToken: Cookie.load('refreshToken')
+      }), headers)
       .then(response => {
-
         Auth.deauthenticateUser()
         this.props.router.push(::this.getPath('login'))
       })

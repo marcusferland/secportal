@@ -98,6 +98,13 @@ class Login extends React.Component {
       .then(response => {
         if (response.data && response.data.token) {
           cookie.save('token', response.data.token, Config.cookies.config)
+          cookie.save('refreshToken', response.data.refreshToken, {
+            domain: Config.host,
+            expires: Config.date,
+            maxAge: Config.refreshTokenExpiryInSeconds,
+            path: '/',
+            secure: false
+          })
           this.props.router.push(::this.getPath('dashboard'))
         }
       })
