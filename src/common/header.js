@@ -5,6 +5,7 @@ import axios from 'axios'
 import querystring from 'querystring'
 import Cookie from 'react-cookie'
 import { Link, withRouter } from 'react-router'
+import Auth from './auth'
 
 import {
   Nav,
@@ -16,8 +17,6 @@ import {
   NavItem,
   SidebarBtn
 } from '@sketchpixy/rubix'
-
-import Auth from './auth'
 
 @withRouter
 class Brand extends React.Component {

@@ -1,4 +1,9 @@
 import React from 'react'
+import { Link, withRouter } from 'react-router'
+import axios from 'axios'
+import cookie from 'react-cookie'
+import querystring from 'querystring'
+import Auth from './auth'
 
 import {
   Row,
@@ -13,10 +18,6 @@ import {
   SidebarNavItem
 } from '@sketchpixy/rubix'
 
-import { Link, withRouter } from 'react-router'
-
-import Auth from './auth'
-
 @withRouter
 class ApplicationSidebar extends React.Component {
   handleChange(e) {
@@ -24,8 +25,24 @@ class ApplicationSidebar extends React.Component {
   }
 
   handleLogout(e) {
-    Auth.deauthenticateUser()
-    this.props.router.push('/');
+    const headers = {
+      headers: {
+        'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
+        'Content-type': 'application/x-www-form-urlencoded'
+      }
+    }
+
+    axios
+      .post('http://localhost:8080/user/logout', querystring.stringify({
+        refreshToken: cookie.load('refreshToken')
+      }), headers)
+      .then(response => {
+        Auth.deauthenticateUser()
+        this.props.router.push(::this.getPath('login'))
+      })
+      .catch(err => {
+        return err
+      })
   }
 
   getPath(path) {
