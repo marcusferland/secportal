@@ -18,30 +18,13 @@ import Auth from './common/auth'
 /* Pages */
 
 import Homepage from './routes/Homepage'
-
 import Dashboard from './routes/Dashboard'
 import Security from './routes/Security'
-
-import Buttons from './routes/Buttons'
-import Dropdowns from './routes/Dropdowns'
-import Modals from './routes/Modals'
-
-import Controls from './routes/Controls'
-
-import Tables from './routes/Tables'
-
-import Grids from './routes/Grids'
-
-import Fonts from './routes/Fonts'
-
 import Login from './routes/Login'
 import Signup from './routes/Signup'
-
 import Lock from './routes/Lock'
 
-import Totp from './routes/Totp'
-
-function requireAuth(nextState, replace, callback) {
+function requireAuth(nextState, replace) {
   if ( ! Auth.isUserAuthenticated() ) {
     if ( ! Auth.getUserRefreshToken() ) {
       return replace({
@@ -64,22 +47,12 @@ function requireAuth(nextState, replace, callback) {
       }), refreshTokenConfig)
       .then(response => {
         cookie.save('token', response.data.access_token, Config.cookies.config)
-        return replace({
-          pathname: '/ltr/dashboard'
-        })
       })
       .catch(err => {
         return replace({
           pathname: '/ltr/login'
         })
       })
-  }
-}
-function requireAuthTotp(nextState, replace) {
-  if ( Auth.isUserAuthenticated() ) {
-    return replace({
-      pathname: '/ltr/dashboard'
-    })
   }
 }
 
@@ -119,13 +92,6 @@ const routes = (
   <Route component={App}>
     <Route path='dashboard' component={Dashboard} onEnter={requireAuth} />
     <Route path='settings/security' component={Security} onEnter={requireAuth} />
-    <Route path='ui-elements/buttons' component={Buttons} onEnter={requireAuth} />
-    <Route path='ui-elements/dropdowns' component={Dropdowns} onEnter={requireAuth} />
-    <Route path='ui-elements/modals' component={Modals} onEnter={requireAuth} />
-    <Route path='forms/controls' component={Controls} onEnter={requireAuth} />
-    <Route path='tables/bootstrap-tables' component={Tables} onEnter={requireAuth} />
-    <Route path='grid' component={Grids} onEnter={requireAuth} />
-    <Route path='fonts' component={Fonts} onEnter={requireAuth} />
   </Route>
 )
 
@@ -135,7 +101,6 @@ const routes = (
 const basicRoutes = (
   <Route>
     <Route path='lock' component={Lock} />
-    <Route path='totp' component={Totp} onEnter={requireAuthTotp} />
     <Route path='login' component={Login} onEnter={isAuthed} />
     <Route path='signup' component={Signup} onEnter={isAuthed} />
   </Route>
