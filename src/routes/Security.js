@@ -43,15 +43,15 @@ export default class Security extends React.Component {
   }
 
   componentDidMount() {
-    const config = {
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded'
-      }
-    }
+    const user = JSON.parse(localStorage.getItem('user'))
     axios
       .post('http://localhost:8080/totp/codes', querystring.stringify({
-        email: Auth.getUserEmail()
-      }), config)
+        email: user.email
+      }), {
+        headers: {
+          'Content-type': 'application/x-www-form-urlencoded'
+        }
+      })
       .then(response => {
         this.setState({ totps: response.data.totps })
       })

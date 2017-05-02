@@ -4,6 +4,7 @@ import { IndexRoute, Route } from 'react-router'
 import axios from 'axios'
 import cookie from 'react-cookie'
 import querystring from 'querystring'
+import co from 'co'
 import Config from './common/config'
 
 import { Grid, Row, Col, MainContainer } from '@sketchpixy/rubix'
@@ -24,36 +25,41 @@ import Login from './routes/Login'
 import Signup from './routes/Signup'
 import Lock from './routes/Lock'
 
-function requireAuth(nextState, replace) {
-  if ( ! Auth.isUserAuthenticated() ) {
-    if ( ! Auth.getUserRefreshToken() ) {
-      return replace({
-        pathname: '/ltr/login'
-      })
-    }
-
-    const refreshTokenConfig = {
-      headers: {
-        'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
-        'Content-type': 'application/x-www-form-urlencoded'
-      }
-    }
-    let token = null
-
-    axios
-      .post('http://localhost:3001/token', querystring.stringify({
-        grant_type: 'refresh_token',
-        token: Auth.getUserRefreshToken()
-      }), refreshTokenConfig)
-      .then(response => {
-        cookie.save('token', response.data.access_token, Config.cookies.config)
-      })
-      .catch(err => {
-        return replace({
+function requireAuth(nextState, replace, cb) {
+  co(function*() {
+    if ( ! Auth.isUserAuthenticated() ) {
+      if ( ! Auth.getUserRefreshToken() ) {
+        replace({
           pathname: '/ltr/login'
         })
-      })
-  }
+      }
+
+      const refreshTokenConfig = {
+        headers: {
+          'Authorization': 'Basic dGVzdGNsaWVudDpzZWNyZXQ=',
+          'Content-type': 'application/x-www-form-urlencoded'
+        }
+      }
+      let token = null
+
+      yield axios.post('http://localhost:3001/token', querystring.stringify({
+                    grant_type: 'refresh_token',
+                    token: Auth.getUserRefreshToken()
+                  }), refreshTokenConfig)
+                  .then(response => {
+                    localStorage.removeItem('user')
+                    cookie.save('token', response.data.access_token, Config.cookies.config)
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    cb()
+                  })
+                  .catch(err => {
+                    replace({
+                      pathname: '/ltr/login'
+                    })
+                  })
+    }
+  })
+  cb()
 }
 
 function isAuthed(nextState, replace) {

@@ -82,15 +82,6 @@ app.post('/totp/codes', function(req, res, next) {
     return res.json({
       totps: user.backup_totp
     }).end()
-
-    /**users.update(user, { $set: { secret: req.session.qr } }, function (err) {
-      if (err) {
-        // req.flash('setup-2fa-error', err);
-        return res.redirect('/setup-2fa')
-      }
-
-      res.redirect('/profile')
-    })*/
   })
 })
 

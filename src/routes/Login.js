@@ -105,6 +105,9 @@ class Login extends React.Component {
             path: '/',
             secure: false
           })
+
+          localStorage.setItem('user', JSON.stringify(response.data.user))
+
           this.props.router.push(::this.getPath('dashboard'))
         }
       })

@@ -115,6 +115,8 @@ class Auth extends React.Component {
    */
   static deauthenticateUser() {
     Cookie.remove('token', '/')
+    localStorage.removeItem('user')
+    return
   }
 
   /**
