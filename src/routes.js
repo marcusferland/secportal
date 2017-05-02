@@ -41,7 +41,7 @@ import Lock from './routes/Lock'
 
 import Totp from './routes/Totp'
 
-function requireAuth(nextState, replace) {
+function requireAuth(nextState, replace, callback) {
   if ( ! Auth.isUserAuthenticated() ) {
     if ( ! Auth.getUserRefreshToken() ) {
       return replace({
@@ -64,7 +64,6 @@ function requireAuth(nextState, replace) {
       }), refreshTokenConfig)
       .then(response => {
         cookie.save('token', response.data.access_token, Config.cookies.config)
-
         return replace({
           pathname: '/ltr/dashboard'
         })
@@ -77,7 +76,7 @@ function requireAuth(nextState, replace) {
   }
 }
 function requireAuthTotp(nextState, replace) {
-  if ( Auth.isUserAuthenticated('token') ) {
+  if ( Auth.isUserAuthenticated() ) {
     return replace({
       pathname: '/ltr/dashboard'
     })
@@ -85,7 +84,7 @@ function requireAuthTotp(nextState, replace) {
 }
 
 function isAuthed(nextState, replace) {
-  if ( Auth.isUserAuthenticated('token') ) {
+  if ( Auth.isUserAuthenticated() ) {
     return replace({
       pathname: '/ltr/dashboard'
     })
