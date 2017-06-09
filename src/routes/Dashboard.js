@@ -162,6 +162,11 @@ export default class Dashboard extends React.Component {
   }
   getMessages() {
     return axios.get('http://localhost:3002/api/v1/messages/total')
+    /** return axios.get('https://sp-stats-api.internal/rest/v1/stats/total?type=messages&company=ESNTR&startDate=1494288000&endDate=1496879999', {
+      headers: {
+        'Authorization': 'token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTY4NjA2MDQsImlhdCI6MTQ5Njg2MDAwNCwic3ViIjoxLCJjb21wYW55IjoiRVNOVFIifQ.w8a2fiuSaz3HVwA82Y1Vn7cjAwcd35OlvfMe9ggcrpg'
+      }
+    }) */
   }
   getTargetedAssets() {
     return axios.get('http://localhost:3002/api/v1/targeted_assets/total')
